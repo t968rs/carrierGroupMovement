@@ -103,7 +103,7 @@ var config = {
     "cluster": true,
     "showCoverageOnHover": true,
     "minZoom": 12,
-    "url": "carrier_movements_bootleaf/data/locations.geojson",
+    "url": "data/locations.geojson",
     "style": {
         "stroke": true,
         "fillColor": "#00FFFF",
