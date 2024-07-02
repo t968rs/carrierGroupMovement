@@ -6,13 +6,15 @@ var config = {
 	"start": {
 		// "maxZoom": 16,
 		"center": [38.203,-99.799],
-		"zoom": 4,
-		"attributionControl": true,
+		"zoom": 3,
+		"attributionControl": false,
 		"zoomControl": false
 	},
 	"about": {
 		"title": "Carrier Group Movement Map",
-		"contents": "<p>This page houses a map that tracks global carrier group movements <a href='https://github.com/bmcbride/bootleaf'>Bootleaf map </a>started by Bryan McBride.</p><p>It's designed for rapid web map development. See <a href='https://github.com/iag-geo/bootleaf'>https://github.com/iag-geo/bootleaf</a> for more information.</p><p>Chage this message in the config file</p>"
+		"contents": "<p>This page houses a map that tracks global carrier group movements " +
+			"" +
+			"<p></p>Uses <a href='https://github.com/bmcbride/bootleaf'>Bootleaf map </a>started by Bryan McBride.</p></p>"
 	},
 	"controls": {
 		"zoom": {
