@@ -87,7 +87,8 @@ var config = {
 	],
 	"projections": [
 		{3857: '+proj=merc +a=6378137 +b=6378137 +lat_ts=0 +lon_0=0 +x_0=0 +y_0=0 +k=1 +units=m +nadgrids=@null ' +
-				'+wktext +no_defs +type=crs '}
+				'+wktext +no_defs +type=crs '},
+		{4269: '+proj=longlat +ellps=GRS80 +datum=NAD83 +no_defs '}
 	],
 	"highlightStyle": {
 		"weight": 2,
@@ -111,7 +112,7 @@ var config = {
         "fillColor": "#00FFFF",
         "fillOpacity": 0.5,
         "radius": 10,
-        "weight": 0.5,
+        "weight": 1,
         "opacity": 1,
         "color": '#727272'
 		  },
