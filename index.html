@@ -74,6 +74,11 @@ body { margin: 0; padding: 0; }
     });
 
     spinGlobe();
+    const popup = new mapboxgl.Popup({ closeOnClick: false })
+        const lngLat = popup.getLngLat()
+        .setLngLat(lngLat)
+        .setHTML('<h1>Hello World!</h1>')
+        .addTo(map);
 </script>
 
 </body>
