@@ -104,7 +104,7 @@ var config = {
     "type": "geoJSON",
     "cluster": true,
     "showCoverageOnHover": true,
-    "minZoom": 12,
+    "minZoom": 1,
     "url": "data/locations.geojson",
     "style": {
         "stroke": true,
