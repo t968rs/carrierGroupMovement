@@ -3,5 +3,5 @@
   <component name="Black">
     <option name="sdkName" value="arcpy_only" />
   </component>
-  <component name="ProjectRootManager" version="2" project-jdk-name="downloaders" project-jdk-type="Python SDK" />
+  <component name="ProjectRootManager" version="2" project-jdk-name="rioxarray" project-jdk-type="Python SDK" />
 </project>
