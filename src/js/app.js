@@ -34,6 +34,7 @@ var bootleaf = {
     {"id": "esriNationalGeographic", "type": "esri", "theme": "NationalGeographic", "label": "National Geographic (ArcGIS)"},
     {"id": "esriOceans", "type": "esri", "theme": "Oceans", "label": "Oceans (ArcGIS)"},
     {"id": "OpenStreetMap", "type": "tiled", "label": "OpenStreetMap", "url": "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"},
+    {"id": "GlobeKTG", "type": "tiled", "label": "GlobeKTG", "url": "mapbox://styles/t968rs/cly4kadyt00c401r19uqr7c8e"},
     {"id": "Aerial", "type": "bing", "label": "Bing satellite"},
     {"id": "AerialWithLabels", "type": "bing", "label": "Bing satellite labels"},
     {"id": "Road", "type": "bing", "label": "Bing streets"}

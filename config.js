@@ -57,7 +57,7 @@ var config = {
 	},
 
 	"activeTool": "filterWidget", // options are identify/coordinates/queryWidget
-	"basemaps": ['esriGray', 'esriDarkGray', 'esriStreets', 'OpenStreetMap', "Aerial"],
+	"basemaps": ['GlobeKTG', 'esriGray', 'esriDarkGray', 'esriStreets', 'OpenStreetMap', "Aerial"],
 	"bing_key": "enter your Bing Maps key",
 	"mapboxKey": "pk.eyJ1IjoidDk2OHJzIiwiYSI6ImNpamF5cTcxZDAwY2R1bWx4cWJvd3JtYXoifQ.XqJkBCgSJeCCeF_yugpG5A",
 	// "defaultIcon": {
