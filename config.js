@@ -73,11 +73,11 @@ var config = {
 	"tocCategories": [
 		{
 			"name": "GeoJSON layers",
-			"layers": ["theatres", "museums", "us_density"]
+			"layers": ["Group Locations", "Fleets"]
 		},
 		{
 			"name": "ArcGIS Layers",
-			"layers" : ["cities", "counties", "railways", "us_states"]
+			"layers" : []
 		},
 		{
 			"name": "WMS/WFS layers",
