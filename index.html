@@ -19,15 +19,19 @@
     <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=yes">
     <meta name="theme-color" content="#000000">
     <meta name="description" content="">
     <meta name="author" content="">
-    <title>{myMapTitle}</title>
+    <title>{Carrier Group Movement}</title>
 
     <!-- required libraries -->
+    <script src='https://api.mapbox.com/mapbox-gl-js/v3.4.0/mapbox-gl.js'></script>
+    <link href='https://api.mapbox.com/mapbox-gl-js/v3.4.0/mapbox-gl.css' rel='stylesheet' />
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.0/css/bootstrap.min.css"
           integrity="sha384-SI27wrMjH3ZZ89r4o+fGIJtnzkAnFs3E4qz9DIYioCQ5l9Rd/7UAa8DHcaL8jkWt" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="mapbox://styles/t968rs/cly4kadyt00c401r19uqr7c8e">
     <link rel="stylesheet" href="./src/plugins/datatables/datatables.min.css"/>
     <link rel="stylesheet" href="./src/plugins/datatables/buttons.dataTables.min.css"/>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
@@ -138,10 +142,71 @@
             </div>
         </div>
     </div>
-    <div id="map">
+    <div id="map"></div>
+        <script>
+            mapboxgl.accessToken = 'pk.eyJ1IjoidDk2OHJzIiwiYSI6ImNpamF5cTcxZDAwY2R1bWx4cWJvd3JtYXoifQ.XqJkBCgSJeCCeF_yugpG5A';
+            const map = new mapboxgl.Map({
+                container: 'map',
+                style: 'mapbox://styles/t968rs/cly4kadyt00c401r19uqr7c8e',
+                projection: 'globe', // Display the map as a globe, since satellite-v9 defaults to Mercator
+                zoom: 1,
+                center: [30, 15]
+            });
+
+            map.addControl(new mapboxgl.NavigationControl());
+            map.scrollZoom.disable();
+
+            map.on('style.load', () => {
+                map.setFog({}); // Set the default atmosphere style
+            });
+
+            // The following values can be changed to control rotation speed:
+
+            // At low zooms, complete a revolution every two minutes.
+            const secondsPerRevolution = 240;
+            // Above zoom level 5, do not rotate.
+            const maxSpinZoom = 5;
+            // Rotate at intermediate speeds between zoom levels 3 and 5.
+            const slowSpinZoom = 3;
+
+            let userInteracting = false;
+            const spinEnabled = true;
+
+            function spinGlobe() {
+                const zoom = map.getZoom();
+                if (spinEnabled && !userInteracting && zoom < maxSpinZoom) {
+                    let distancePerSecond = 360 / secondsPerRevolution;
+                    if (zoom > slowSpinZoom) {
+                        // Slow spinning at higher zooms
+                        const zoomDif =
+                            (maxSpinZoom - zoom) / (maxSpinZoom - slowSpinZoom);
+                        distancePerSecond *= zoomDif;
+                    }
+                    const center = map.getCenter();
+                    center.lng -= distancePerSecond;
+                    // Smoothly animate the map over one second.
+                    // When this animation is complete, it calls a 'moveend' event.
+                    map.easeTo({ center, duration: 1000, easing: (n) => n });
+                }
+            }
+
+            // Pause spinning on interaction
+            map.on('mousedown', () => {
+                userInteracting = true;
+            });
+            map.on('dragstart', () => {
+                userInteracting = true;
+            });
+
+            // When animation is complete, start spinning if there is no ongoing interaction
+            map.on('moveend', () => {
+                spinGlobe();
+            });
+
+            spinGlobe();
+        </script>
 
     </div>
-</div>
 <div id="loading">
     <div class="loading-indicator">
         <div class="progress progress-striped active">
@@ -294,8 +359,8 @@
 </script>
 
 <!-- required libraries -->
-<!--    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>-->
-<!--    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>-->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
         integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
@@ -339,6 +404,7 @@
 <!-- this app's code -->
 <script src="./src/js/app.js"></script>
 <script src="./src/js/listeners.js"></script>
+
 
 <!-- optional - custom functionality -->
 <script src="custom.js"></script>

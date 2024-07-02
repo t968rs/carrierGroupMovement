@@ -105,7 +105,7 @@ var config = {
     "cluster": true,
     "showCoverageOnHover": true,
     "minZoom": 1,
-    "url": "data/locations.geojson",
+    "url": "./data/locations.geojson",
     "style": {
         "stroke": true,
         "fillColor": "#00FFFF",

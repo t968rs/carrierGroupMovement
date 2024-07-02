@@ -17,5 +17,6 @@
     <orderEntry type="library" name="esri-leaflet-renderers" level="application" />
     <orderEntry type="library" name="handlebars.js" level="application" />
     <orderEntry type="library" name="esri-leaflet-cluster" level="application" />
+    <orderEntry type="library" name="mapbox-gl" level="application" />
   </component>
 </module>
