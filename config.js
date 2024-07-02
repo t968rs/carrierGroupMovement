@@ -8,7 +8,7 @@ var config = {
 		"center": [38.203,-99.799],
 		"zoom": 3,
 		"attributionControl": false,
-		"zoomControl": false
+		"zoomControl": true
 	},
 	"about": {
 		"title": "Carrier Group Movement Map",
