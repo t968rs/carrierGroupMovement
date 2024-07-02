@@ -5,9 +5,9 @@ var config = {
 	"title": "Carrier Group Movement Map",
 	"start": {
 		// "maxZoom": 16,
-		"center": [38.203,-99.799],
+		"center": [46,10],
 		"zoom": 3,
-		"attributionControl": false,
+		"attributionControl": true,
 		"zoomControl": true
 	},
 	"about": {
