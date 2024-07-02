@@ -72,7 +72,7 @@ var config = {
 	// },
 	"tocCategories": [
 		{
-			"name": "GeoJSON layers",
+			"name": "Floating Asset Locations",
 			"layers": ["Group Locations", "Fleets"]
 		},
 		{
@@ -101,16 +101,16 @@ var config = {
 	},
 	"layers": [
 	{
-    "id": "group locations",
+    "id": "Group Locations",
     "type": "geoJSON",
-    "cluster": true,
+    "cluster": false,
     "showCoverageOnHover": true,
     "minZoom": 1,
     "url": "./data/locations.geojson",
     "style": {
         "stroke": true,
         "fillColor": "#00FFFF",
-        "fillOpacity": 0.5,
+        "fillOpacity": 1,
         "radius": 10,
         "weight": 1,
         "opacity": 1,
