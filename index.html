@@ -74,6 +74,7 @@ body { margin: 0; padding: 0; }
     });
 
     spinGlobe();
+    // Popups for each layer
     map.on('click', 'Command_Group_Locations', (e) => {
             // Copy coordinates array.
             const coordinates = e.features[0].geometry.coordinates.slice();
