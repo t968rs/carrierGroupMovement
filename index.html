@@ -75,14 +75,21 @@ body { margin: 0; padding: 0; }
             spinGlobe();
     });
 
+    // Load data
+    map.on('load', function () {
+    // Use fetch to get the GeoJSON file
+    fetch('data/locations.geojson')
+        .then(response => response.json())
+        .then(data => {
+            map.addSource('current-locations', {
+                type: 'geojson',
+                data: data
+            });
 
     // Add assets to the map AND start spin?
     map.on('load', () => {
             spinGlobe();
-            map.addSource('current-locations', {
-                      'type': 'geojson',
-                      'url': 'data/locations.geojson'
-                      });
+
             map.addLayer({
                       id: 'carrier-group-locations',
                       type: 'circle',
