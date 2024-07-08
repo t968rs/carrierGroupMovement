@@ -1,15 +1,17 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="utf-8">
-<title>Global Carrier Group Movement Map</title>
-<meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
-<link href="https://api.mapbox.com/mapbox-gl-js/v3.4.0/mapbox-gl.css" rel="stylesheet">
-<script src="https://api.mapbox.com/mapbox-gl-js/v3.4.0/mapbox-gl.js"></script>
-<style>
-body { margin: 0; padding: 0; }
-#map { position: absolute; top: 5%; bottom: 0; width: 100%; }
-</style>
+    <meta charset="utf-8">
+    <title>Global Carrier Group Movement Map</title>
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+    <link href="https://api.mapbox.com/mapbox-gl-js/v3.4.0/mapbox-gl.css" rel="stylesheet">
+    <script src="https://api.mapbox.com/mapbox-gl-js/v3.4.0/mapbox-gl.js"></script>
+    <style>
+    body { margin: 0; padding: 0; }
+    #map { position: absolute; top: 5%; bottom: 0; width: 100%; }
+    </style>
+    <!-- Include the spinGlobe.js file -->
+    <script src="src/spin_globe.js"></script>
 </head>
 <body>
 <div id="map"></div>
@@ -27,33 +29,42 @@ body { margin: 0; padding: 0; }
     map.addControl(new mapboxgl.NavigationControl());
 
     // The following values can be changed to control rotation speed:
-    // At low zooms, complete a revolution every two minutes.
     const secondsPerRevolution = 300;
-    // Above zoom level 5, do not rotate.
     const maxSpinZoom = 5;
-    // Rotate at intermediate speeds between zoom levels 3 and 5.
     const slowSpinZoom = 3;
-
     let userInteracting = true;
     const spinEnabled = true;
 
-    function spinGlobe() {
-        const zoom = map.getZoom();
-        if (spinEnabled && !userInteracting && zoom < maxSpinZoom) {
-            let distancePerSecond = 360 / secondsPerRevolution;
-            if (zoom > slowSpinZoom) {
-                // Slow spinning at higher zooms
-                const zoomDif =
-                    (maxSpinZoom - zoom) / (maxSpinZoom - slowSpinZoom);
-                distancePerSecond *= zoomDif;
-            }
-            const center = map.getCenter();
-            center.lng -= distancePerSecond;
-            // Smoothly animate the map over one second.
-            // When this animation is complete, it calls a 'moveend' event.
-            map.easeTo({ center, duration: 1000, easing: (n) => n });
-        }
-    }
+    // Spin the globe
+    map.on('load', () => {
+        spinGlobe(map, spinEnabled, userInteracting, maxSpinZoom, slowSpinZoom, secondsPerRevolution);
+        console.log('Map loaded');
+        fetch('data/locations.geojson')
+            .then(response => response.json())
+            .then(data => {
+                map.addSource('current-locations', {
+                    type: 'geojson',
+                    data: data
+                });
+                console.log('Locations loaded')
+            });
+        map.loadImage('mapbox-markers/blue_carrier1.png', (error, image) => {
+                  if (error) throw error;
+                  map.addImage('blue-ac', image);
+                });
+        map.addLayer({
+                      id: 'carrier-group-locations',
+                      type: 'symbol',
+                      source: 'current-locations',
+                      // filter: {'tm_domain': 'current'},
+                      layout: {
+                        'icon-image': 'blue-ac', // Use the loaded image as the marker
+                        'icon-size': 1,
+                        'icon-allow-overlap': true
+                      }
+                    });
+        console.log('Layer added')
+        });
 
     // Pause spinning on interaction
     map.on('mousedown', () => {
@@ -62,54 +73,22 @@ body { margin: 0; padding: 0; }
     map.on('dragstart', () => {
         userInteracting = true;
     });
-
     // When animation is complete, start spinning if there is no ongoing interaction
     map.on('moveend', () => {
         spinGlobe();
     });
-    spinGlobe();
-
-    // When map loads, start spinning if there is no ongoing interaction
-    map.on('load', () => {
-        console.log('Map loaded');
-            spinGlobe();
-    });
 
     // Load data
     map.on('load', function () {
-    // Use fetch to get the GeoJSON file
-    fetch('data/locations.geojson')
-        .then(response => response.json())
-        .then(data => {
-            map.addSource('current-locations', {
-                type: 'geojson',
-                data: data
-            });
-            console.log('Locations loaded')
-        });
+        // Use fetch to get the GeoJSON file
 
-    });
 
     // Add assets to the map AND start spin?
     map.on('load', () => {
             spinGlobe();
 
-            map.addLayer({
-                      id: 'carrier-group-locations',
-                      type: 'circle',
-                      source: 'current-locations',
-                      // filter: {'tm_domain': 'current'},
-                      // layout: {
-                            //'icon-image': 'blue-ac',
-                            //'icon-size': 1,
-                            //'icon-allow-overlap': true
-                        //}
-                    });
-            map.loadImage('mapbox-markers/blue_carrier1.png', (error, image) => {
-                  if (error) throw error;
-                  map.addImage('blue-ac', image);
 
-                });
+
     });
     // Popups for each layer
     map.on('click', 'carrier-group-locations', (e) => {
