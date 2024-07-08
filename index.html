@@ -23,8 +23,8 @@ body { margin: 0; padding: 0; }
         center: [30, 15]
     });
 
+    // Add user control
     map.addControl(new mapboxgl.NavigationControl());
-    map.scrollZoom.disable();
 
     map.on('style.load', () => {
         map.setFog({}); // Set the default atmosphere style
@@ -39,7 +39,7 @@ body { margin: 0; padding: 0; }
     // Rotate at intermediate speeds between zoom levels 3 and 5.
     const slowSpinZoom = 3;
 
-    let userInteracting = false;
+    let userInteracting = true;
     const spinEnabled = true;
 
     function spinGlobe() {
@@ -73,9 +73,6 @@ body { margin: 0; padding: 0; }
         spinGlobe();
     });
     spinGlobe();
-
-    // Add user control
-    map.addControl(new mapboxgl.NavigationControl());
 
     // Popups for each layer
     map.on('click', 'Command_Group_Locations', (e) => {
