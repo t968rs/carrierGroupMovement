@@ -87,12 +87,12 @@ body { margin: 0; padding: 0; }
         map.addSource('current-locations', {
           'type': 'geojson',
           'url': 'data/locations.geojson'
-        });
+          });
         map.addLayer({
               id: 'carrier-group-locations',
               type: 'symbol',
               source: 'current-locations',
-              filter: {'tm_domain': 'current'},
+              // filter: {'tm_domain': 'current'},
               layout: {
                     'icon-image': 'blue-ac',
                     'icon-size': 1,
