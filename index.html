@@ -17,7 +17,7 @@ body { margin: 0; padding: 0; }
 	mapboxgl.accessToken = 'pk.eyJ1IjoidDk2OHJzIiwiYSI6ImNseWRpazVxbzA1Nm0ybG9xbXE0M3QyOTgifQ.btquvF7N1fQRhtftLPwzaA';
     const map = new mapboxgl.Map({
         container: 'map',
-        style: 'src/style.json',
+        style: '.src/style.json',
         projection: 'globe', // Display the map as a globe, since satellite-v9 defaults to Mercator
         zoom: 3,
         center: [30, 15]
@@ -78,7 +78,7 @@ body { margin: 0; padding: 0; }
     // Load data
     map.on('load', function () {
     // Use fetch to get the GeoJSON file
-    fetch('data/locations.geojson')
+    fetch('.data/locations.geojson')
         .then(response => response.json())
         .then(data => {
             map.addSource('current-locations', {
