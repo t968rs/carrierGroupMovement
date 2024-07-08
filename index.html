@@ -75,7 +75,7 @@ body { margin: 0; padding: 0; }
     spinGlobe();
 
     // Popups for each layer
-    map.on('click', 'Command_Group_Locations', (e) => {
+    map.on('click', 'command-group-locations', (e) => {
             // Copy coordinates array.
             const coordinates = e.features[0].geometry.coordinates.slice();
             const description = e.features[0].properties.description;
@@ -96,7 +96,7 @@ body { margin: 0; padding: 0; }
         });
 
         // Change the cursor to a pointer when the mouse is over the places layer.
-        map.on('mouseenter', 'Command_Group_Locations', () => {
+        map.on('mouseenter', 'command-group-locations', () => {
             map.getCanvas().style.cursor = 'pointer';
         });
 
