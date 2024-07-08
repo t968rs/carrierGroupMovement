@@ -14,7 +14,7 @@ body { margin: 0; padding: 0; }
 <body>
 <div id="map"></div>
 <script>
-	mapboxgl.accessToken = 'pk.eyJ1IjoidDk2OHJzIiwiYSI6ImNpamF5cTcxZDAwY2R1bWx4cWJvd3JtYXoifQ.XqJkBCgSJeCCeF_yugpG5A';
+	mapboxgl.accessToken = 'pk.eyJ1IjoidDk2OHJzIiwiYSI6ImNseWRpazVxbzA1Nm0ybG9xbXE0M3QyOTgifQ.btquvF7N1fQRhtftLPwzaA';
     const map = new mapboxgl.Map({
         container: 'map',
         style: 'mapbox://styles/t968rs/cly4kadyt00c401r19uqr7c8e',
@@ -78,7 +78,7 @@ body { margin: 0; padding: 0; }
     // Load data
     map.on('load', function () {
     // Use fetch to get the GeoJSON file
-    fetch('https://raw.githubusercontent.com/t968rs/carrierGroupMovement/master/data/locations.geojson')
+    fetch('data/locations.geojson')
         .then(response => response.json())
         .then(data => {
             map.addSource('current-locations', {
