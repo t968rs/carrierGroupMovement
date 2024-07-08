@@ -79,7 +79,7 @@ body { margin: 0; padding: 0; }
     map.on('load', () => {
         map.loadImage('mapbox-markers/AC_blue1.svg', (error, image) => {
           if (error) throw error;
-          map.addImage('blue-ac', image, { 'sdf': true });
+          map.addImage('blue-ac', image);
           map.addSource('blue-ac', {
             'type': 'vector',
             'url': 'mapbox-markers/AC_blue1.svg'
