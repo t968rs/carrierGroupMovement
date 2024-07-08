@@ -76,7 +76,7 @@ body { margin: 0; padding: 0; }
 
 
     // Add current locations layer
-    map.on('load', () => {
+    map.on('style.load', () => {
         map.loadImage('mapbox-markers/AC_blue1.svg', (error, image) => {
           if (error) throw error;
           map.addImage('blue-ac', image, { 'sdf': true });
