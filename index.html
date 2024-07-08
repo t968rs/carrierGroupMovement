@@ -81,18 +81,18 @@ body { margin: 0; padding: 0; }
               'type': 'geojson',
               'url': 'data/locations.geojson'
               });
-      map.addLayer({
-              id: 'carrier-group-locations',
-              type: 'symbol',
-              source: 'current-locations',
-              // filter: {'tm_domain': 'current'},
-              layout: {
-                    'icon-image': 'blue-ac',
-                    'icon-size': 1,
-                    'icon-allow-overlap': true
-                }
+          map.addLayer({
+                  id: 'carrier-group-locations',
+                  type: 'symbol',
+                  source: 'current-locations',
+                  // filter: {'tm_domain': 'current'},
+                  layout: {
+                        'icon-image': 'blue-ac',
+                        'icon-size': 1,
+                        'icon-allow-overlap': true
+                    }
+                });
             });
-        });
 
     // Popups for each layer
     map.on('click', 'carrier-group-locations', (e) => {
