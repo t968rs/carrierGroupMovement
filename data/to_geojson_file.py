@@ -30,7 +30,7 @@ class WriteNewGeoJSON:
 
         self.crs = gdf.crs
         self.c_list = [c for c in gdf.columns.to_list()]
-        print(f'Columns: {self.c_list}')
+        print(f'Columns: {self.c_list}, \n CRS: {self.crs}')
         self.gdf = gdf
 
     def gdf_to_geojson(self):

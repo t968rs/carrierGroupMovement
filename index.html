@@ -68,31 +68,34 @@ body { margin: 0; padding: 0; }
         spinGlobe();
     });
     spinGlobe();
-
-
-    // Add current locations layer
     map.on('load', () => {
-        spinGlobe();
-        map.loadImage('mapbox-markers/AC_blue1.svg', (error, image) => {
-          if (error) throw error;
-          map.addImage('blue-ac', image);
+            spinGlobe();
+    });
 
-          map.addSource('current-locations', {
-              'type': 'geojson',
-              'url': 'data/locations.geojson'
-              });
-          map.addLayer({
-                  id: 'carrier-group-locations',
-                  type: 'symbol',
-                  source: 'current-locations',
-                  // filter: {'tm_domain': 'current'},
-                  layout: {
-                        'icon-image': 'blue-ac',
-                        'icon-size': 1,
-                        'icon-allow-overlap': true
-                    }
+
+    // Add assets to the map AND start spin?
+    map.on('load', () => {
+            spinGlobe();
+            map.loadImage('mapbox-markers/AC_blue1.svg', (error, image) => {
+              if (error) throw error;
+              map.addImage('blue-ac', image);
+
+              map.addSource('current-locations', {
+                  'type': 'geojson',
+                  'url': 'data/locations.geojson'
+                  });
+              map.addLayer({
+                      id: 'carrier-group-locations',
+                      type: 'symbol',
+                      source: 'current-locations',
+                      // filter: {'tm_domain': 'current'},
+                      layout: {
+                            'icon-image': 'blue-ac',
+                            'icon-size': 1,
+                            'icon-allow-overlap': true
+                        }
+                    });
                 });
-            });
 
     // Popups for each layer
     map.on('click', 'carrier-group-locations', (e) => {
