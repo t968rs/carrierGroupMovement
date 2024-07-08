@@ -78,7 +78,7 @@ body { margin: 0; padding: 0; }
     // Load data
     map.on('load', function () {
     // Use fetch to get the GeoJSON file
-    fetch('data/locations.geojson')
+    fetch('mapbox-markers/blue_carrier1.png')
         .then(response => response.json())
         .then(data => {
             map.addSource('current-locations', {
