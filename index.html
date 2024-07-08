@@ -71,6 +71,7 @@ body { margin: 0; padding: 0; }
 
     // When map loads, start spinning if there is no ongoing interaction
     map.on('load', () => {
+        console.log('Map loaded');
             spinGlobe();
     });
 
