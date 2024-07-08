@@ -79,14 +79,15 @@ body { margin: 0; padding: 0; }
     // Add assets to the map AND start spin?
     map.on('load', () => {
             spinGlobe();
+            map.addSource('current-locations', {
+                      'type': 'geojson',
+                      'url': 'data/locations.geojson'
+                      });
             map.loadImage('mapbox-markers/blue_carrier1.png', (error, image) => {
                   if (error) throw error;
                   map.addImage('blue-ac', image);
 
-                  map.addSource('current-locations', {
-                      'type': 'geojson',
-                      'url': 'data/locations.geojson'
-                      });
+
                   map.addLayer({
                           id: 'carrier-group-locations',
                           type: 'symbol',
