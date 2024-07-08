@@ -2,13 +2,13 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>Guides</title>
+<title>Global Career Group Movement Map</title>
 <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
 <link href="https://api.mapbox.com/mapbox-gl-js/v3.4.0/mapbox-gl.css" rel="stylesheet">
 <script src="https://api.mapbox.com/mapbox-gl-js/v3.4.0/mapbox-gl.js"></script>
 <style>
 body { margin: 0; padding: 0; }
-#map { position: absolute; top: 0; bottom: 0; width: 100%; }
+#map { position: absolute; top: 10%; bottom: 0; width: 90%; }
 </style>
 </head>
 <body>
@@ -26,12 +26,12 @@ body { margin: 0; padding: 0; }
     // Add user control
     map.addControl(new mapboxgl.NavigationControl());
 
+    // add Fog
     map.on('style.load', () => {
         map.setFog({}); // Set the default atmosphere style
     });
 
     // The following values can be changed to control rotation speed:
-
     // At low zooms, complete a revolution every two minutes.
     const secondsPerRevolution = 300;
     // Above zoom level 5, do not rotate.
@@ -74,13 +74,33 @@ body { margin: 0; padding: 0; }
     });
     spinGlobe();
 
+    // Add current locations layer
+    map.on('load', 'command-group-locations', () => {
+        map.loadImage('https://docs.mapbox.com/help/demos/using-recolorable-images-in-mapbox-maps/shop-15.png', (error, image) => {
+          if (error) throw error;
+          map.addImage('store-icon', image, { 'sdf': true });
+          map.addSource('food-stores', {
+            'type': 'vector',
+            'url': 'mapbox://examples.dl46ljcs'
+          });
+        map.addLayer({
+              id: 'command-group-locations',
+              type: 'symbol',
+              source: {
+                type: 'vector',
+                url: 't968rs.cly4poss85nku1tl8hnx7g7xv-5f6yo'
+              },
+              'source-layer': 'command-group-locations'
+            });
+        });
+
     // Popups for each layer
     map.on('click', 'command-group-locations', (e) => {
             // Copy coordinates array.
             const coordinates = e.features[0].geometry.coordinates.slice();
             const description = e.features[0].properties.description;
-            const mission = e.features[0].properties.current_mi;
-            const hull_id = e.features[0].properties.hull_id;
+            // const mission = e.features[0].properties.current_mi;
+            // const hull_id = e.features[0].properties.hull_id;
 
             // Ensure that if the map is zoomed out such that multiple
             // copies of the feature are visible, the popup appears
