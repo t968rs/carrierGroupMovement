@@ -26,11 +26,6 @@ body { margin: 0; padding: 0; }
     // Add user control
     map.addControl(new mapboxgl.NavigationControl());
 
-    // add Fog
-    map.on('style.load', () => {
-        map.setFog({}); // Set the default atmosphere style
-    });
-
     // The following values can be changed to control rotation speed:
     // At low zooms, complete a revolution every two minutes.
     const secondsPerRevolution = 300;
@@ -77,6 +72,7 @@ body { margin: 0; padding: 0; }
 
     // Add current locations layer
     map.on('style.load', () => {
+        spinGlobe();
         map.loadImage('mapbox-markers/AC_blue1.svg', (error, image) => {
           if (error) throw error;
           map.addImage('blue-ac', image);
