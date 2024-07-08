@@ -86,23 +86,23 @@ body { margin: 0; padding: 0; }
           });
           map.addSource('current-locations', {
             'type': 'geojson',
-            'url': 'https://github.com/t968rs/carrierGroupMovement/blob/06a853985e937293dae0c6d8690c743c953cb47a/data/locations.geojson'
+            'url': 'data/locations.geojson'
           });
         map.addLayer({
-              id: 'command-group-locations',
+              id: 'carrier-group-locations',
               type: 'symbol',
               source: 'current-locations',
               filter: {'tm_domain': 'current'},
               layout: {
                     'icon-image': 'blue-ac',
-                    'icon-size': 0.5,
+                    'icon-size': 1,
                     'icon-allow-overlap': true
                 }
             });
         });
 
     // Popups for each layer
-    map.on('click', 'command-group-locations', (e) => {
+    map.on('click', 'carrier-group-locations', (e) => {
             // Copy coordinates array.
             const coordinates = e.features[0].geometry.coordinates.slice();
             const description = e.features[0].properties.description;
