@@ -44,7 +44,6 @@
             data: 'https://raw.githubusercontent.com/t968rs/carrierGroupMovement/master/data/locations.geojson'
             });
         console.log('Locations loaded')
-            });
         map.loadImage('mapbox-markers/blue_carrier1.png', (error, image) => {
                   if (error) throw error;
                   map.addImage('blue-ac', image);
@@ -61,7 +60,7 @@
                       }
                     });
         console.log('Layer added')
-        });
+    });
 
     // Pause spinning on interaction
     map.on('mousedown', () => {
