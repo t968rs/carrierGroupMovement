@@ -84,15 +84,20 @@ body { margin: 0; padding: 0; }
             'type': 'vector',
             'url': 'mapbox-markers/AC_blue1.svg'
           });
+          map.addSource('current-locations', {
+            'type': 'geojson',
+            'url': 'https://github.com/t968rs/carrierGroupMovement/blob/06a853985e937293dae0c6d8690c743c953cb47a/data/locations.geojson'
+          });
         map.addLayer({
               id: 'command-group-locations',
               type: 'symbol',
-              source: {
-                type: 'vector',
-                url: 't968rs.cly4poss85nku1tl8hnx7g7xv-5f6yo'
-              },
+              source: 'current-locations',
               filter: {'tm_domain': 'current'},
-              'source-layer': 'command-group-locations'
+              layout: {
+                    'icon-image': 'blue-ac',
+                    'icon-size': 0.5,
+                    'icon-allow-overlap': true
+                }
             });
         });
 
