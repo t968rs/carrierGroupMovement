@@ -39,14 +39,11 @@
     map.on('load', () => {
         spinGlobe(map, spinEnabled, userInteracting, maxSpinZoom, slowSpinZoom, secondsPerRevolution);
         console.log('Map loaded');
-        fetch('https://raw.githubusercontent.com/t968rs/carrierGroupMovement/master/data/locations.geojson')
-            .then(response => response.json())
-            .then(data => {
-                map.addSource('current-locations', {
-                    type: 'geojson',
-                    data: data
-                });
-                console.log('Locations loaded')
+        map.addSource('current-locations', {
+            type: 'geojson',
+            data: 'https://raw.githubusercontent.com/t968rs/carrierGroupMovement/master/data/locations.geojson'
+            });
+        console.log('Locations loaded')
             });
         map.loadImage('mapbox-markers/blue_carrier1.png', (error, image) => {
                   if (error) throw error;
