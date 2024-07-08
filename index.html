@@ -78,18 +78,6 @@
         spinGlobe();
     });
 
-    // Load data
-    map.on('load', function () {
-        // Use fetch to get the GeoJSON file
-
-
-    // Add assets to the map AND start spin?
-    map.on('load', () => {
-            spinGlobe();
-
-
-
-    });
     // Popups for each layer
     map.on('click', 'carrier-group-locations', (e) => {
             // Copy coordinates array.
