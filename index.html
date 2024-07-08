@@ -78,7 +78,7 @@ body { margin: 0; padding: 0; }
     // Load data
     map.on('load', function () {
     // Use fetch to get the GeoJSON file
-    fetch('https://raw.githubusercontent.com/t968rs/carrierGroupMovement/master/data/locations.geojson')
+    fetch('data/locations.geojson')
         .then(response => response.json())
         .then(data => {
             map.addSource('current-locations', {
