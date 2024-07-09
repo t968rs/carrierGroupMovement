@@ -11,7 +11,7 @@ def read_json_to_dict(file: str) -> dict:
 
 class WriteNewGeoJSON:
     def __init__(self):
-        field_dicts = read_json_to_dict("../data/column_dictionary.json")
+        field_dicts = read_json_to_dict("../data/locations_columns.json")
         self.set_attributes_from_dict(field_dicts)
         self.server_path = os.path.split(__file__)[0]
         self.shp_path = "../data/esri_exports/locations.shp"

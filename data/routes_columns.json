@@ -1,0 +1,21 @@
+{
+    "field_aliases":
+    {
+        "length_miles": "Route Length (miles)",
+        "start_date": "Start Travel",
+        "end_date": "Arrival",
+        "loc_id": "Loc ID",
+        "hull_id": "Hull ID",
+        "tm_domain": "Time Domain"
+    },
+
+    "data_types":
+    {
+        "length_miles": "float32",
+        "start_date": "datetime64[s]",
+        "end_date": "datetime64[s]",
+        "loc_id": "int8",
+        "hull_id": "object",
+        "tm_domain": "object"
+    }
+}
