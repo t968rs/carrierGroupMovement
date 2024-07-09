@@ -1,0 +1,26 @@
+{
+    "field_aliases": {
+        "loc_id": "loc_id",
+        "hull_id": "hull_id",
+        "tm_domain": "Time Domain",
+        "type": "Command Type",
+        "cur_miss": "Current Mission",
+        "status": "Status",
+        "info_src": "Info Source",
+        "deprt_date": "Departure Date",
+        "loc_date": "Location Date",
+        "group_id": "Group ID"
+    },
+    "data_types": {
+        "loc_id": "int8",
+        "hull_id": "object",
+        "tm_domain": "object",
+        "type": "object",
+        "cur_miss": "object",
+        "status": "object",
+        "info_src": "object",
+        "deprt_date": "datetime64[ns]",
+        "loc_date": "datetime64[ns]",
+        "group_id": "object"
+    }
+}

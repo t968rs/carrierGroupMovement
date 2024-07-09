@@ -21,6 +21,21 @@
 <div id="map"></div>
 <script type="module">
     import { drawRoute } from './src/globe_functions.js';
+    // Fetch the alias mapping JSON file
+    fetch('aliasMapping.json')
+        .then(response => response.json())
+        .then(aliasMapping => {
+            // Function to create popup content
+            function createPopupContent(clickedfeature) {
+                let popupContent = '<ul>';
+                for (let property in clickedfeature.properties) {
+                    // Use alias if available, otherwise use the original property name
+                    const aliasProperty = aliasMapping[property] || property;
+                    popupContent += `<li><strong>${aliasProperty}</strong>: ${clickedfeature.properties[property]}</li>`;
+                }
+                popupContent += '</ul>';
+                return popupContent;
+            }
 	mapboxgl.accessToken = 'pk.eyJ1IjoidDk2OHJzIiwiYSI6ImNpamF5cTcxZDAwY2R1bWx4cWJvd3JtYXoifQ.XqJkBCgSJeCCeF_yugpG5A';
     const map = new mapboxgl.Map({
         container: 'map',
@@ -124,75 +139,14 @@
         }
 
         // Dynamically create HTML content for the popup
-        let popupContent = "<h3>Carrier Info</h3><ul>";
-        for (let property in clickedfeature.properties)
-        {   if (property === 'hull_id')
-            {
-                popupContent += `<li><strong>Command Hull: ${clickedfeature.properties[property]}</strong></li>`;
-            }
-            else if (property !== 'Info Source')
-            {
-            popupContent += `<li><strong>${property}</strong>: ${clickedfeature.properties[property]}</li>`;
-            }
-        }
+        const popupContent = createPopupContent(clickedfeature);
+        console.log(popupContent);
 
         // Display a popup with attributes/columns from the clicked feature
         loc_popup = new mapboxgl.Popup()
             .setLngLat(coordinates)
             .setHTML(popupContent)
             .addTo(map);
-
-        // Assuming the new layer has been added and is called
-        const locationHistory = map.querySourceFeatures('invisible-locations',
-            {
-            sourceLayer: 'locations', // replace with your source layer if necessary
-            filter: hull_filter
-            });
-
-        if (locationHistory.length > 0)
-        {
-            // Sort the locations by date or some timestamp
-            locationHistory.sort((a, b) =>
-            {
-                return new Date(a.properties["Location Date"]) - new Date(b.properties["Location Date"]);
-            });
-
-            // Get the most recent past point
-            const pastPoint = locationHistory.filter(
-                point => new Date(point.properties["Location Date"]) < new Date(clickedfeature.properties["Location Date"])).pop();
-
-            // Get the future-dated point
-            const futurePoint = locationHistory.find(
-                point => new Date(point.properties["Location Date"]) > new Date(clickedfeature.properties["Location Date"]));
-
-            if (pastPoint && futurePoint) {
-                // Draw the route
-                drawRoute(map, pastPoint, clickedfeature, futurePoint);
-
-                // Create a new layer for selected points
-                const selectedPoints = [pastPoint, clickedfeature, futurePoint];
-                map.addSource('selected-points',
-                    {
-                        type: 'geojson',
-                        data: {
-                            type: 'FeatureCollection',
-                            features: selectedPoints
-                        }
-                    });
-
-                map.addLayer({
-                    id: 'selected-points-layer',
-                    type: 'circle',
-                    source: 'selected-points',
-                    paint: {
-                        'circle-color': '#FF0000',
-                        'circle-radius': 8,
-                        'circle-stroke-width': 2,
-                        'circle-stroke-color': '#FFFFFF'
-                    }
-                });
-            }
-        }
 
         // Add the past and future layers
         if (map.getLayer('past-layer')) {
