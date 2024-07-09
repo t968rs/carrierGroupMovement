@@ -1,7 +1,7 @@
 {
     "field_aliases": {
-        "loc_id": "loc_id",
-        "hull_id": "hull_id",
+        "loc_id": "Loc ID",
+        "hull_id": "Hull ID",
         "tm_domain": "Time Domain",
         "type": "Command Type",
         "cur_miss": "Current Mission",
