@@ -15,15 +15,7 @@
     <script src="src/spin_globe.js"></script>
 </head>
 <body>
-<style>
-    .mapboxgl-popup {
-                max-width: 400px;
-                font:
-                    12px/20px "PT Serif Bold",
-                    Arial,
-                    Helvetica;
-            }
-</style>
+
 <div id="map"></div>
 <script>
 	mapboxgl.accessToken = 'pk.eyJ1IjoidDk2OHJzIiwiYSI6ImNpamF5cTcxZDAwY2R1bWx4cWJvd3JtYXoifQ.XqJkBCgSJeCCeF_yugpG5A';
@@ -46,7 +38,6 @@
     const spinEnabled = true;
     // Variables for tracking popup and added layer
     let loc_popup;
-    let highlightedLayerId;
 
     // Spin the globe
     map.on('load', () => {
@@ -100,7 +91,7 @@
             // Copy coordinates array.
             const coordinates = e.features[0].geometry.coordinates.slice();
             const description = e.features[0].properties.description;
-            const feature = e.features[0];
+            const clickedfeature = e.features[0];
             // Close any existing popup
             if (loc_popup) {
                 loc_popup.remove();
@@ -125,7 +116,7 @@
                             type: 'geojson',
                             data: {
                                 type: 'FeatureCollection',
-                                features: [feature] // Only the clicked feature
+                                features: [clickedfeature] // Only the clicked feature
                             }
                         },
                         paint: {
@@ -140,8 +131,8 @@
                         type: 'symbol',
                         source: 'locations',
                         filter: ["all", ["match", ["get", "tm_domain"], ["Past"], true, false],
-                                ["==", ["get", "hull_id"], hullId]
-                                ],
+                            ["==", ["get", "hull_id"], clickedfeature.properties.hull_id]
+                            ],
                         layout: {
                             'icon-image': 'blue-ac', // Use the loaded image as the marker
                             'icon-size': 0.05,
@@ -153,7 +144,9 @@
                         id: 'future-layer',
                         type: 'symbol',
                         source: 'locations',
-                        filter: ["all",["match",["get", "tm_domain"],["Future"],true,false]],
+                        filter: ["all",
+                            ["match",["get", "tm_domain"],["Future"],true,false],
+                            ["==", ["get", "hull_id"], clickedfeature.properties.hull_id]],
                         layout: {
                             'icon-image': 'green-ac', // Use the loaded image as the marker
                             'icon-size': 0.05,
@@ -179,7 +172,6 @@
                 if (!isClickInsidePopup) {
                     loc_popup.remove();
                     map.removeLayer(highlightedLayerId);
-                    highlightedLayerId = null;
                 }
             }
         });
