@@ -47,7 +47,8 @@
         const aliasMapping = columnDictionaries['field_aliases'];
 
         // Function to create popup content
-        function createPopupContent(clickedfeature) {
+        function createPopupContent(clickedfeature)
+        {
             let popupContent = '<ul>';
             for (let property in clickedfeature.properties) {
                 // Use alias if available, otherwise use the original property name
@@ -229,7 +230,6 @@
             map.getCanvas().style.cursor = '';
         });
 
-    });
 
 </script>
 
