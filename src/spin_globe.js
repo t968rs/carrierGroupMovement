@@ -1,5 +1,6 @@
 function spinGlobe(map_input, spinEnabled, userInteracting, maxSpinZoom, slowSpinZoom, secondsPerRevolution) {
         const zoom = map_input.getZoom();
+        console.log("Current Zoom: ", zoom)
         if (spinEnabled && !userInteracting && zoom < maxSpinZoom) {
             let distancePerSecond = 360 / secondsPerRevolution;
             if (zoom > slowSpinZoom) {
