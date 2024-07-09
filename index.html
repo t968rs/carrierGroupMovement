@@ -22,7 +22,7 @@
 <script type="module">
     import { drawRoute } from './src/globe_functions.js';
     // Fetch the alias mapping JSON file
-    fetch('aliasMapping.json')
+    fetch('column_dictionary.json')
         .then(response => response.json())
         .then(aliasMapping => {
             // Function to create popup content
@@ -221,14 +221,18 @@
         // Change the cursor to a pointer when the mouse is over the places layer.
         map.on('mouseenter', 'command-group-locations', () =>
         {
+            console.log(' Mouse entered')
             map.getCanvas().style.cursor = 'pointer';
         });
 
         // Change it back to a pointer when it leaves.
         map.on('mouseleave', 'command-group-locations', () =>
         {
+            console.log(' Mouse left')
             map.getCanvas().style.cursor = '';
         });
+
+    });
 
 </script>
 
