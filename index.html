@@ -120,11 +120,12 @@
         // Check if past-layer and future-layer exist, and remove them if they do
         const exist_list = []
         if (map.getLayer('past-layer')) {
-            exist_list.push('past-layer');
+            console.log('Past layer exists');
             map.setFilter('past-layer',
                 ["all", ["match", ["get", "Time Domain"], ["Past"], true, false],
                     hull_filter]);
         } else {
+            console.log('Past layer does not exist')
             map.addLayer({
                 id: 'past-layer',
                 type: 'symbol',
@@ -139,12 +140,13 @@
             })
         }
         if (map.getLayer('future-layer')) {
-            exist_list.push('future-layer');
+            console.log('Future layer exists');
             map.setFilter('future-layer',
                 ["all",
                     ["match", ["get", "Time Domain"], ["Future"], true, false],
                     hull_filter]);
         } else {
+            console.log('Future layer does not exist')
             // Add the past and future layers
             map.addLayer({
                 id: 'future-layer',
@@ -160,7 +162,6 @@
                 }
             })
         }
-    console.log('Existing: ' + exist_list);
     });
 
         // Remove popup and additional layers when clicking outside the popup
