@@ -40,67 +40,66 @@
     let loc_popup;
 
     // On Load event
-    map.on('load', () => {
+    map.on('load', async () => {
         // Fetch the alias mapping JSON file
-        fetch('data/column_dictionary.json')
-            .then(response => response.json())
-            .then(columnDictionaries => {
-                // Create a dictionary of alias mappings
-                const aliasMapping = columnDictionaries['field_aliases'];
-                // Function to create popup content
-                function createPopupContent(clickedfeature) {
-                    let popupContent = '<ul>';
-                    for (let property in clickedfeature.properties) {
-                        // Use alias if available, otherwise use the original property name
-                        const aliasProperty = aliasMapping[property] || property;
-                        popupContent += `<li><strong>${aliasProperty}</strong>: ${clickedfeature.properties[property]}</li>`;
-                    }
-                    popupContent += '</ul>';
-                    return popupContent;
-                }
+        const response = await fetch('data/column_dictionary.json');
+        const columnDictionaries = await response.json();
+        const aliasMapping = columnDictionaries['field_aliases'];
+
+        // Function to create popup content
+        function createPopupContent(clickedfeature) {
+            let popupContent = '<ul>';
+            for (let property in clickedfeature.properties) {
+                // Use alias if available, otherwise use the original property name
+                const aliasProperty = aliasMapping[property] || property;
+                popupContent += `<li><strong>${aliasProperty}</strong>: ${clickedfeature.properties[property]}</li>`;
+            }
+            popupContent += '</ul>';
+            return popupContent;
+        }
+
         console.log('Map loaded');
         map.addSource('locations', {
             type: 'geojson',
             data: 'https://raw.githubusercontent.com/t968rs/carrierGroupMovement/master/data/locations.geojson'
-            });
+        });
         console.log('Locations loaded')
-        map.loadImage('mapbox-markers/AC_blue1.png', (error, image) => {
-                  if (error) throw error;
-                  map.addImage('blue-ac', image);
-                });
-        map.loadImage('mapbox-markers/AC_gray1.png', (error, image) => {
-                  if (error) throw error;
-                  map.addImage('gray-ac', image);
-                });
-        map.loadImage('mapbox-markers/AC_green1.png', (error, image) => {
-                  if (error) throw error;
-                  map.addImage('green-ac', image);
-                });
+        const images = [
+            {name: 'blue-ac', url: 'mapbox-markers/AC_blue1.png'},
+            {name: 'gray-ac', url: 'mapbox-markers/AC_gray1.png'},
+            {name: 'green-ac', url: 'mapbox-markers/AC_green1.png'}
+        ];
+        for (let img of images) {
+            map.loadImage(img.url, (error, image) => {
+                if (error) throw error;
+                map.addImage(img.name, image);
+            });
+        }
         map.addLayer(
             {
-                      id: 'invisible-locations',
-                      type: 'circle',
-                      source: 'locations',
-                      paint: {
-                        'circle-radius': 0, // Set radius to 0 so points are invisible
-                        'circle-opacity': 0, // Set opacity to 0 to make points invisible
-                        'circle-stroke-width': 0 // Set stroke width to 0 to remove any stroke
-                      },
-                      layout: {
-                          visibility: 'visible' // Ensure the layer is visible
-                      }
+                id: 'invisible-locations',
+                type: 'circle',
+                source: 'locations',
+                paint: {
+                    'circle-radius': 10, // Set radius to 0 so points are invisible
+                    'circle-opacity': 0, // Set opacity to 0 to make points invisible
+                    'circle-stroke-width': 0 // Set stroke width to 0 to remove any stroke
+                },
+                layout: {
+                    visibility: 'visible' // Ensure the layer is visible
+                }
             });
         map.addLayer({
-                      id: 'carrier-group-locations',
-                      type: 'symbol',
-                      source: 'locations',
-                      filter: ["all",["match",["get", "Time Domain"],["Current"],true,false]],
-                      layout: {
-                        'icon-image': 'blue-ac', // Use the loaded image as the marker
-                        'icon-size': 0.2,
-                        'icon-allow-overlap': true
-                      }
-                    });
+            id: 'carrier-group-locations',
+            type: 'symbol',
+            source: 'locations',
+            filter: ["all", ["match", ["get", "Time Domain"], ["Current"], true, false]],
+            layout: {
+                'icon-image': 'blue-ac', // Use the loaded image as the marker
+                'icon-size': 0.2,
+                'icon-allow-overlap': true
+            }
+        });
         console.log('Layer added')
     });
 
