@@ -44,6 +44,9 @@
     const slowSpinZoom = 3;
     let userInteracting = true;
     const spinEnabled = true;
+    // Variables for tracking popup and added layer
+    let loc_popup;
+    let highlightedLayerId;
 
     // Spin the globe
     map.on('load', () => {
@@ -98,11 +101,20 @@
             const coordinates = e.features[0].geometry.coordinates.slice();
             const description = e.features[0].properties.description;
             const feature = e.features[0];
-
+            // Close any existing popup
+            if (loc_popup) {
+                loc_popup.remove();
+            }
+            // Dynamically create HTML content for the popup
+            let popupContent = '<h3>Carrier Info</h3><ul>';
+            for (let property in feature.properties) {
+                popupContent += `<li><strong>${property}</strong>: ${feature.properties[property]}</li>`;
+                }
+                popupContent += '</ul>';
                     // Display a popup with attributes/columns from the clicked feature
-                    new mapboxgl.Popup()
+                    loc_popup = new mapboxgl.Popup()
                         .setLngLat(coordinates)
-                        .setHTML(description)
+                        .setHTML(popupContent)
                         .addTo(map);
 
                     // Add a new layer (e.g., highlight layer or filtered layer)
@@ -127,7 +139,9 @@
                         id: 'past-layer',
                         type: 'symbol',
                         source: 'locations',
-                        filter: ["all",["match",["get", "tm_domain"],["Past"],true,false]],
+                        filter: ["all", ["match", ["get", "tm_domain"], ["Past"], true, false],
+                                ["==", ["get", "hull_id"], hullId]
+                                ],
                         layout: {
                             'icon-image': 'blue-ac', // Use the loaded image as the marker
                             'icon-size': 0.05,
@@ -157,6 +171,18 @@
                 }
             }
 
+        // Remove popup and highlighted layer when clicking outside of the popup
+        map.on('click', (event) => {
+            if (loc_popup && highlightedLayerId) {
+                const isClickInsidePopup = loc_popup.isOpen() && loc_popup.getElement().contains(event.originalEvent.target);
+
+                if (!isClickInsidePopup) {
+                    loc_popup.remove();
+                    map.removeLayer(highlightedLayerId);
+                    highlightedLayerId = null;
+                }
+            }
+        });
 
         // Change the cursor to a pointer when the mouse is over the places layer.
         map.on('mouseenter', 'command-group-locations', () => {
