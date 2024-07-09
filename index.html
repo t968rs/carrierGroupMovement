@@ -91,7 +91,6 @@
             // Copy coordinates array.
             const coordinates = e.features[0].geometry.coordinates.slice();
             let hullid = e.features[0].properties.hull_id;
-
             const clickedfeature = e.features[0];
             console.log(clickedfeature.properties);
 
@@ -99,6 +98,14 @@
             if (loc_popup) {
                 loc_popup.remove();
             }
+            // Check if past-layer and future-layer exist, and remove them if they do
+            if (map.getLayer('past-layer')) {
+                map.removeLayer('past-layer');
+                }
+            if (map.getLayer('future-layer')) {
+                map.removeLayer('future-layer');
+            }
+
             // Dynamically create HTML content for the popup
             let popupContent = "<h3>Carrier Info</h3><ul>";
             for (let property in clickedfeature.properties) {
@@ -110,23 +117,6 @@
                         .setLngLat(coordinates)
                         .setHTML(popupContent)
                         .addTo(map);
-
-                    // Add a new layer (e.g., highlight layer or filtered layer)
-                    map.addLayer({
-                        id: 'highlighted-carrier',
-                        type: 'circle',
-                        source: {
-                            type: 'geojson',
-                            data: {
-                                type: 'FeatureCollection',
-                                features: [clickedfeature] // Only the clicked feature
-                            }
-                        },
-                        paint: {
-                            'circle-radius': 8,
-                            'circle-color': '#ff0000'
-                        }
-                    });
 
                     // Add the past and future layers
                     map.addLayer({
