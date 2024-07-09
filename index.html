@@ -21,6 +21,20 @@
     const response = await fetch('data/column_dictionary.json');
     const columnDictionaries = await response.json();
     const aliasMapping = columnDictionaries['field_aliases'];
+
+    // Function to create popup content
+        function createPopupContent(clickedfeature)
+        {
+            let popupContent = '<ul>';
+            for (let property in clickedfeature.properties) {
+                // Use alias if available, otherwise use the original property name
+                const aliasProperty = aliasMapping[property] || property;
+                popupContent += `<li><strong>${aliasProperty}</strong>: ${clickedfeature.properties[property]}</li>`;
+            }
+            popupContent += '</ul>';
+            return popupContent;
+        }
+
 	mapboxgl.accessToken = 'pk.eyJ1IjoidDk2OHJzIiwiYSI6ImNpamF5cTcxZDAwY2R1bWx4cWJvd3JtYXoifQ.XqJkBCgSJeCCeF_yugpG5A';
     const map = new mapboxgl.Map({
         container: 'map',
@@ -44,19 +58,6 @@
 
     // On Load event
     map.on('load', () => {
-
-        // Function to create popup content
-        function createPopupContent(clickedfeature)
-        {
-            let popupContent = '<ul>';
-            for (let property in clickedfeature.properties) {
-                // Use alias if available, otherwise use the original property name
-                const aliasProperty = aliasMapping[property] || property;
-                popupContent += `<li><strong>${aliasProperty}</strong>: ${clickedfeature.properties[property]}</li>`;
-            }
-            popupContent += '</ul>';
-            return popupContent;
-        }
 
         console.log('Map loaded');
         map.addSource('locations', {
