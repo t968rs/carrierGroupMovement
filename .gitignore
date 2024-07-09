@@ -4,7 +4,11 @@
 # Editor-based HTTP Client requests
 /httpRequests/
 # Datasource local storage ignored files
-/dataSources/
 /dev_only
 /img
 /dataSources.local.xml
+/data/esri_exports
+/py_functions
+/routing
+*.sr.lock
+*.py

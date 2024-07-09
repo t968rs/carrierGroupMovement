@@ -11,12 +11,11 @@ def read_json_to_dict(file: str) -> dict:
 
 class WriteNewGeoJSON:
     def __init__(self):
-        field_dicts = read_json_to_dict("column_dictionary.json")
+        field_dicts = read_json_to_dict("../data/column_dictionary.json")
         self.set_attributes_from_dict(field_dicts)
-
-        self.folder_loc = r"A:\carrier_GROUP_data\02_mapping\carrier_group_mapping.gdb"
         self.server_path = os.path.split(__file__)[0]
-        self.loc_path = r"A:\carrier_GROUP_data\02_mapping\zz_shp_dbf_exports\locations.shp"
+        self.shp_path = "../data/esri_exports/locations.shp"
+        self.output_folder = os.path.split(self.shp_path)[0]
         self.crs = None
         self.gdf = None
         self.c_list = None
@@ -37,7 +36,7 @@ class WriteNewGeoJSON:
 
     def _init_gdf_from_fc(self):
         # Read Polygon fc
-        base, filename = os.path.split(self.loc_path)
+        base, filename = os.path.split(self.shp_path)
         if "." in filename:
             filename = filename.split(".")[0]
         self.filename = filename
@@ -47,25 +46,13 @@ class WriteNewGeoJSON:
             # print(fiona.listlayers(gdb))
             gdf = gpd.read_file(base, driver='FileGDB', layer=filename)
         else:
-            gdf = gpd.read_file(self.loc_path)
+            gdf = gpd.read_file(self.shp_path)
 
         self.crs = gdf.crs
         gdf = self.add_numbered_primary_key(gdf, 'loc_id')
         self.c_list = [c for c in gdf.columns.to_list()]
         print(f'   Input Columns: {self.c_list}, \n   CRS: {self.crs}')
         self.gdf = gdf.astype(self.data_types)
-
-    def rename_columns(self):
-
-        for col in self.c_list:
-            if col in self.field_aliases.keys():
-                self.gdf.rename(columns={col: self.field_aliases[col]}, inplace=True)
-            else:
-                if col not in ['geometry']:
-                    self.gdf.drop([col], axis=1, inplace=True)
-                    print(f'Column {col} not in field_aliases. Dropped.')
-        self.c_list = [c for c in self.gdf.columns.to_list()]
-        print(f'Columns: {self.c_list}')
 
     @staticmethod
     def add_numbered_primary_key(gdf, col_name):
@@ -81,10 +68,10 @@ class WriteNewGeoJSON:
             else:
                 print(f'    {c}: {self.gdf.dtypes[c]}')
         driver = "GeoJSON"
-        outpath = os.path.join(self.server_path, f"{self.filename}.geojson")
+        outpath = os.path.join(self.output_folder, f"{self.filename}.geojson")
         self.gdf.to_file(filename=outpath, driver=driver,
                          crs=self.crs, mode="w")
-        print(f"Saved {self.loc_path} to {outpath}")
+        print(f"Saved {self.shp_path} to {outpath}")
 
 
 WriteNewGeoJSON().gdf_to_geojson()

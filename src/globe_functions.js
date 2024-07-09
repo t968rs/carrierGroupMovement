@@ -33,5 +33,3 @@ function drawRoute(map, pastPoint, currentPoint, futurePoint) {
         });
     }
 }
-
-export { drawRoute };

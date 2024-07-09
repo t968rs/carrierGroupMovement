@@ -4,14 +4,12 @@ import geopandas as gpd
 from shapely.geometry import LineString
 from scgraph.geographs.marnet import marnet_geograph
 from datetime import datetime
-from scgraph.utils import get_line_path
 
 
 class UpdateSeaRoutes:
     def __init__(self):
-        self.point_locations = "locations.geojson"
-        self.this_folder = os.path.split(__file__)[0]
-        print(f'folder_loc: {self.this_folder}')
+        self.point_locations = "../data/locations.geojson"
+        self.output_folder = os.path.split(self.point_locations)[0]
 
         self.crs = None
         self.route_gdf = None
@@ -162,8 +160,8 @@ class UpdateSeaRoutes:
 
         # Save the GeoDataFrames
         print(f'All Lines GDF: \n{all_lines_gdf}')
-        all_lines_gdf.to_file(os.path.join(self.this_folder, "routes.geojson"), driver="GeoJSON")
-        print(f"Saved routes to {self.this_folder} as routes.json")
+        all_lines_gdf.to_file(os.path.join(self.output_folder, "routes.geojson"), driver="GeoJSON")
+        print(f"Saved routes to {self.output_folder} as routes.json")
 
 
 UpdateSeaRoutes().create_routes()
