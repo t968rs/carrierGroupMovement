@@ -96,7 +96,7 @@
             id: 'carrier-group-locations',
             type: 'symbol',
             source: 'locations',
-            filter: ["all", ["match", ["get", "Time Domain"], ["Current"], true, false]],
+            filter: ["all", ["match", ["get", "tm_domain"], ["Current"], true, false]],
             layout: {
                 'icon-image': 'blue-ac', // Use the loaded image as the marker
                 'icon-size': 0.2,
@@ -152,7 +152,7 @@
         if (map.getLayer('past-layer')) {
             console.log('Past layer exists');
             map.setFilter('past-layer',
-                ["all", ["match", ["get", "Time Domain"], ["Past"], true, false],
+                ["all", ["match", ["get", "tm_domain"], ["Past"], true, false],
                     hull_filter]);
         } else {
             console.log('Past layer does not exist')
@@ -160,7 +160,7 @@
                 id: 'past-layer',
                 type: 'symbol',
                 source: 'locations',
-                filter: ["all", ["match", ["get", "Time Domain"], ["Past"], true, false],
+                filter: ["all", ["match", ["get", "tm_domain"], ["Past"], true, false],
                     hull_filter],
                 layout: {
                     'icon-image': 'gray-ac', // Use the loaded image as the marker
@@ -175,7 +175,7 @@
             console.log('Future layer exists');
             map.setFilter('future-layer',
                 ["all",
-                    ["match", ["get", "Time Domain"], ["Future"], true, false],
+                    ["match", ["get", "tm_domain"], ["Future"], true, false],
                     hull_filter]);
         } else {
             console.log('Future layer does not exist')
@@ -185,7 +185,7 @@
                 type: 'symbol',
                 source: 'locations',
                 filter: ["all",
-                    ["match", ["get", "Time Domain"], ["Future"], true, false],
+                    ["match", ["get", "tm_domain"], ["Future"], true, false],
                     hull_filter],
                 layout: {
                     'icon-image': 'green-ac', // Use the loaded image as the marker
