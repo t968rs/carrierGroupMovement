@@ -25,7 +25,7 @@
     console.log("Alias Mapping: ", Object.keys(aliasMapping));
 
     // Import the createPopupContent function
-    import { createPopupContent } from './src/popupContent.js';
+    import { createCarrierPointPopupContent } from './src/popupContent.js';
     /*function createPopupContent(clickedfeature)
     {
         let popupContent = '<ul>';
@@ -146,7 +146,7 @@
         }
 
         // Dynamically create HTML content for the popup
-        const popupContent = createPopupContent(clickedfeature);
+        const popupContent = createCarrierPointPopupContent(clickedfeature);
         console.log(popupContent);
 
         // Display a popup with attributes/columns from the clicked feature
