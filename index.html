@@ -167,8 +167,8 @@
     });
 
         // Remove popup and additional layers when clicking outside the popup
-        map.on('click', (elsewhere) =>
-        {
+        //map.on('click', (elsewhere) =>
+        /*{
             if (loc_popup)
             {
                 const isClickInsidePopup = loc_popup.isOpen() && loc_popup.getElement().contains(elsewhere.originalEvent.target);
@@ -186,7 +186,7 @@
             }
 
 
-        });
+        });*/
 
         // Change the cursor to a pointer when the mouse is over the places layer.
         map.on('mouseenter', 'command-group-locations', () =>
