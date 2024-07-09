@@ -21,6 +21,7 @@ function spinGlobe(map, spinEnabled, userInteracting, maxSpinZoom, slowSpinZoom,
             map.easeTo({ center, duration: 1000, easing: (n) => n });
         }
     }
+export { spinGlobe };
 
 // Function to draw route
 function drawRoute(map, pastPoint, currentPoint, futurePoint) {
