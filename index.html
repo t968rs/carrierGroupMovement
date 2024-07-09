@@ -112,12 +112,12 @@
             {
                 popupContent += `<li><strong>Command Hull: ${clickedfeature.properties[property]}</strong></li>`;
             }
-            else
+            else if (property !== 'Info Source')
             {
             popupContent += `<li><strong>${property}</strong>: ${clickedfeature.properties[property]}</li>`;
             }
         }
-        popupContent += '</ul>';
+
         // Display a popup with attributes/columns from the clicked feature
         console.log(popupContent)
         loc_popup = new mapboxgl.Popup()
