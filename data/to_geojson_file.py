@@ -40,7 +40,9 @@ class WriteNewGeoJSON:
             if col in field_aliases.keys():
                 self.gdf.rename(columns={col: field_aliases[col]}, inplace=True)
             else:
-                print(f'Column {col} not in field_aliases')
+                if col not in ['geometry']:
+                    self.gdf.drop([col], axis=1, inplace=True)
+                    print(f'Column {col} not in field_aliases. Dropped.')
         self.c_list = [c for c in self.gdf.columns.to_list()]
         print(f'Columns: {self.c_list}')
 
