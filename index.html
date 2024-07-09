@@ -95,14 +95,14 @@
         console.log(clickedfeature.properties);
 
         // Ensure that if the map is zoomed out such that multiple
-            // copies of the feature are visible, the popup appears
-            // over the copy being pointed to.
-            if (['mercator', 'equirectangular'].includes(map.getProjection().name))
-            {
-                while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
-                    coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
-                }
+        // copies of the feature are visible, the popup appears
+        // over the copy being pointed to.
+        if (['mercator', 'equirectangular'].includes(map.getProjection().name))
+        {
+            while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+                coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
             }
+        }
 
         // Dynamically create HTML content for the popup
         let popupContent = "<h3>Carrier Info</h3><ul>";
