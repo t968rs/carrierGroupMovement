@@ -43,7 +43,7 @@
 
     // Spin the globe
     map.on('load', () => {
-        spinGlobe(map, spinEnabled, userInteracting, maxSpinZoom, slowSpinZoom, secondsPerRevolution);
+        // spinGlobe(map, spinEnabled, userInteracting, maxSpinZoom, slowSpinZoom, secondsPerRevolution);
         console.log('Map loaded');
         map.addSource('locations', {
             type: 'geojson',
@@ -99,7 +99,7 @@
     });
     // When animation is complete, start spinning if there is no ongoing interaction
     map.on('moveend', () => {
-        spinGlobe();
+        // spinGlobe();
     });
 
     // Popups for each layer
