@@ -1,5 +1,6 @@
 import os
 import geopandas as gpd
+from column_dictionary import field_aliases
 
 
 class WriteNewGeoJSON:
@@ -33,7 +34,17 @@ class WriteNewGeoJSON:
         print(f'Columns: {self.c_list}, \n CRS: {self.crs}')
         self.gdf = gdf
 
+    def rename_columns(self):
+        lookup = field_aliases
+        for col in self.c_list:
+            if col in field_aliases.keys():
+                self.gdf.rename(columns={col: field_aliases[col]}, inplace=True)
+            else:
+                print(f'Column {col} not in field_aliases')
+
     def gdf_to_geojson(self):
+        self.rename_columns()
+
         driver = "GeoJSON"
         outpath = os.path.join(self.server_path, f"{self.filename}.geojson")
         self.gdf.to_file(filename=outpath, driver=driver,
