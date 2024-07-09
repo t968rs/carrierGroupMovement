@@ -112,6 +112,7 @@
         }
         popupContent += '</ul>';
         // Display a popup with attributes/columns from the clicked feature
+        console.log(popupContent)
         loc_popup = new mapboxgl.Popup()
             .setLngLat(coordinates)
             .setHTML(popupContent)
