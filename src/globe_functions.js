@@ -1,10 +1,10 @@
-function spinGlobe(map_input, spinEnabled, userInteracting, maxSpinZoom, slowSpinZoom, secondsPerRevolution) {
+function spinGlobe(map, spinEnabled, userInteracting, maxSpinZoom, slowSpinZoom, secondsPerRevolution) {
         // If the map is not defined, log an error and return.
-        if (!map_input) {
+        if (!map) {
             console.error("map_input is undefined");
             return;
         }
-        const zoom = map_input.getZoom();
+        const zoom = map.getZoom();
         console.log("Current Zoom: ", zoom)
         if (spinEnabled && !userInteracting && zoom < maxSpinZoom) {
             let distancePerSecond = 360 / secondsPerRevolution;
@@ -14,10 +14,10 @@ function spinGlobe(map_input, spinEnabled, userInteracting, maxSpinZoom, slowSpi
                     (maxSpinZoom - zoom) / (maxSpinZoom - slowSpinZoom);
                 distancePerSecond *= zoomDif;
             }
-            const center = map_input.getCenter();
+            const center = map.getCenter();
             center.lng -= distancePerSecond;
             // Smoothly animate the map over one second.
             // When this animation is complete, it calls a 'moveend' event.
-            map_input.easeTo({ center, duration: 1000, easing: (n) => n });
+            map.easeTo({ center, duration: 1000, easing: (n) => n });
         }
     }
