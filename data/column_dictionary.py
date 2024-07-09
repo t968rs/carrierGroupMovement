@@ -1,4 +1,4 @@
-field_aliases = {"hull_id": "Hull ID",
+field_aliases = {"hull_id": "hull_id",
                  "tm_domain": "Time Domain",
                  "type": "Command Type",
                  "cur_miss": "Current Mission",
