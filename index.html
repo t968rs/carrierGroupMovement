@@ -146,7 +146,7 @@
         const locationHistory = map.querySourceFeatures('invisible-locations',
             {
             sourceLayer: 'locations', // replace with your source layer if necessary
-            filter: ['==', ['get', 'hull_id'], hullId]
+            filter: hull_filter
             });
 
         if (locationHistory.length > 0)
