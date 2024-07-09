@@ -34,7 +34,7 @@
     const secondsPerRevolution = 300;
     const maxSpinZoom = 5;
     const slowSpinZoom = 3;
-    let userInteracting = true;
+    let userInteracting = false;
     const spinEnabled = true;
     // Variables for tracking popup and added layer
     let loc_popup;
@@ -93,7 +93,6 @@
             let hullid = e.features[0].properties.hull_id;
             const clickedfeature = e.features[0];
             console.log(clickedfeature.properties);
-
 
             // Check if past-layer and future-layer exist, and remove them if they do
             if (map.getLayer('past-layer')) {
