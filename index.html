@@ -90,7 +90,7 @@
     map.on('click', 'carrier-group-locations', (e) => {
             // Copy coordinates array.
             const coordinates = e.features[0].geometry.coordinates.slice();
-            const hullid = e.features[0].properties.hull_id;
+            let hullid = e.features[0].properties.hull_id;
 
             const clickedfeature = e.features[0];
             console.log(clickedfeature.properties);
@@ -100,7 +100,7 @@
                 loc_popup.remove();
             }
             // Dynamically create HTML content for the popup
-            let popupContent = '<h3>Carrier: hullid</h3><ul>';
+            let popupContent = "<h3>Carrier Info</h3><ul>";
             for (let property in clickedfeature.properties) {
                 popupContent += `<li><strong>${property}</strong>: ${clickedfeature.properties[property]}</li>`;
                 }
@@ -169,7 +169,7 @@
 
         // Remove popup and highlighted layer when clicking outside of the popup
         map.on('click', (event) => {
-            if (loc_popup && highlightedLayerId) {
+            if (loc_popup) {
                 const isClickInsidePopup = loc_popup.isOpen() && loc_popup.getElement().contains(event.originalEvent.target);
 
                 if (!isClickInsidePopup) {
