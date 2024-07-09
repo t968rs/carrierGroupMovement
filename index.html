@@ -25,21 +25,21 @@
     console.log("Alias Mapping: ", aliasMapping.keys());
 
     // Function to create popup content
-        function createPopupContent(clickedfeature)
+    function createPopupContent(clickedfeature)
+    {
+        let popupContent = '<ul>';
+        for (let property in clickedfeature.properties)
         {
-            let popupContent = '<ul>';
-            for (let property in clickedfeature.properties)
-            {
-                // Use alias if available, otherwise use the original property name
-                const aliasProperty = aliasMapping[property] || property;
-                if (!["info_src", "cur_miss"].includes(property))
-                    popupContent += `<li><strong>${aliasProperty}</strong>: ${clickedfeature.properties[property]}</li>`
-                else if (property === "cur_miss")
-                    let shorterText = clickedfeature.properties[property].substring(0, 42)
-                    popupContent += `<li><strong>${aliasProperty}</strong>: ${shorterText}</li>`
-            }
-            return popupContent;
+            // Use alias if available, otherwise use the original property name
+            const aliasProperty = aliasMapping[property] || property;
+            if (!["info_src", "cur_miss"].includes(property))
+                popupContent += `<li><strong>${aliasProperty}</strong>: ${clickedfeature.properties[property]}</li>`
+            else if (property === "cur_miss")
+                let shorterText = clickedfeature.properties[property].substring(0, 42)
+                popupContent += `<li><strong>${aliasProperty}</strong>: ${shorterText}</li>`
         }
+        return popupContent;
+    }
 
 	mapboxgl.accessToken = 'pk.eyJ1IjoidDk2OHJzIiwiYSI6ImNpamF5cTcxZDAwY2R1bWx4cWJvd3JtYXoifQ.XqJkBCgSJeCCeF_yugpG5A';
     const map = new mapboxgl.Map({
