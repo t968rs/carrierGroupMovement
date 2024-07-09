@@ -41,6 +41,8 @@ class WriteNewGeoJSON:
                 self.gdf.rename(columns={col: field_aliases[col]}, inplace=True)
             else:
                 print(f'Column {col} not in field_aliases')
+        self.c_list = [c for c in self.gdf.columns.to_list()]
+        print(f'Columns: {self.c_list}')
 
     def gdf_to_geojson(self):
         self.rename_columns()
