@@ -194,7 +194,7 @@
         // Route Layer
         if (map.getLayer('route-layer')) {
             console.log('Route layer exists');
-            map.setFilter('route-layer', hull_filter);
+            map.setFilter('route-layer', loc_filter);
         } else {
             console.log('Route layer does not exist')
             map.addLayer({
@@ -203,7 +203,7 @@
                 source: 'routes',
                 filter: loc_filter,
                 paint: {
-                    'line-color': '#049d47',
+                    'line-color': '#028663',
                     'line-width': 2
                 }
             })
