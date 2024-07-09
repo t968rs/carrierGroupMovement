@@ -1,4 +1,9 @@
 function spinGlobe(map_input, spinEnabled, userInteracting, maxSpinZoom, slowSpinZoom, secondsPerRevolution) {
+        // If the map is not defined, log an error and return.
+        if (!map_input) {
+            console.error("map_input is undefined");
+            return;
+        }
         const zoom = map_input.getZoom();
         console.log("Current Zoom: ", zoom)
         if (spinEnabled && !userInteracting && zoom < maxSpinZoom) {
