@@ -9,7 +9,10 @@
         "info_src": "Info Source",
         "deprt_date": "Departure Date",
         "loc_date": "Location Date",
-        "group_id": "Group ID"
+        "group_id": "Group ID",
+        "length_miles": "Route Length (miles)",
+        "start_date": "Start Travel",
+        "end_date": "Arrival"
     },
     "data_types": {
         "loc_id": "int8",
@@ -21,6 +24,9 @@
         "info_src": "object",
         "deprt_date": "datetime64[ns]",
         "loc_date": "datetime64[ns]",
-        "group_id": "object"
+        "group_id": "object",
+        "length_miles": "float32",
+        "start_date": "datetime64[ns]",
+        "end_date": "datetime64[ns]"
     }
 }
