@@ -165,12 +165,12 @@
                 if (!isClickInsidePopup) {
                     loc_popup.remove();
                     // Remove past and future layers
-            if (map.getLayer('past-layer')) {
-                map.removeLayer('past-layer');
-                        }
-            if (map.getLayer('future-layer')) {
-                map.removeLayer('future-layer');
-                    }
+                    if (map.getLayer('past-layer')) {
+                        map.removeLayer('past-layer');
+                                }
+                    if (map.getLayer('future-layer')) {
+                        map.removeLayer('future-layer');
+                            }
                 }
             }
 
