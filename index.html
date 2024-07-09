@@ -19,7 +19,7 @@
 <div id="map"></div>
 <script type="module">
     // Fetch the alias mapping JSON file
-    const response = await fetch('./data/column_dictionary.json');
+    const response = await fetch('./data/lolocations_columns.json');
     const columnDictionaries = await response.json();
     const aliasMapping = columnDictionaries['field_aliases'];
     console.log("Alias Mapping: ", Object.keys(aliasMapping));
