@@ -157,7 +157,7 @@
                 }
             }
 
-        // Remove popup and highlighted layer when clicking outside of the popup
+        // Remove popup and additional layers when clicking outside of the popup
         map.on('click', (event) => {
             if (loc_popup) {
                 const isClickInsidePopup = loc_popup.isOpen() && loc_popup.getElement().contains(event.originalEvent.target);
@@ -166,6 +166,12 @@
                     loc_popup.remove();
                     map.removeLayer(highlightedLayerId);
                 }
+            }
+            if (map.getLayer('past-layer')) {
+                map.removeLayer('past-layer');
+                }
+            if (map.getLayer('future-layer')) {
+                map.removeLayer('future-layer');
             }
         });
 
