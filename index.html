@@ -167,11 +167,11 @@
     });
 
         // Remove popup and additional layers when clicking outside the popup
-        map.on('click', (event) =>
+        map.on('click', (elsewhere) =>
         {
             if (loc_popup)
             {
-                const isClickInsidePopup = loc_popup.isOpen() && loc_popup.getElement().contains(event.originalEvent.target);
+                const isClickInsidePopup = loc_popup.isOpen() && loc_popup.getElement().contains(elsewhere.originalEvent.target);
 
                 if (!isClickInsidePopup) {
                     loc_popup.remove();
