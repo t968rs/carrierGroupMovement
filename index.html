@@ -107,8 +107,15 @@
 
         // Dynamically create HTML content for the popup
         let popupContent = "<h3>Carrier Info</h3><ul>";
-        for (let property in clickedfeature.properties) {
+        for (let property in clickedfeature.properties)
+        {   if (property === 'hull_id')
+            {
+                popupContent += `<li><strong>Command Hull: ${clickedfeature.properties[property]}</strong></li>`;
+            }
+            else
+            {
             popupContent += `<li><strong>${property}</strong>: ${clickedfeature.properties[property]}</li>`;
+            }
         }
         popupContent += '</ul>';
         // Display a popup with attributes/columns from the clicked feature
