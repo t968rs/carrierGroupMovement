@@ -164,9 +164,10 @@
 
                 if (!isClickInsidePopup) {
                     loc_popup.remove();
-                    map.removeLayer(highlightedLayerId);
                 }
             }
+
+            // Remove past and future layers
             if (map.getLayer('past-layer')) {
                 map.removeLayer('past-layer');
                 }
