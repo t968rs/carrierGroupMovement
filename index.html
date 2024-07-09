@@ -93,6 +93,7 @@
         let hull_filter = ["==", ["get", "hull_id"], hullid];
         const clickedfeature = e.features[0];
         console.log(clickedfeature.properties);
+        console.log("Hull Filter: ", hull_filter);
 
         // Ensure that if the map is zoomed out such that multiple
         // copies of the feature are visible, the popup appears
