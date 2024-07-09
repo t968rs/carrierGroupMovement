@@ -7,8 +7,15 @@
     <link href="https://api.mapbox.com/mapbox-gl-js/v3.4.0/mapbox-gl.css" rel="stylesheet">
     <script src="https://api.mapbox.com/mapbox-gl-js/v3.4.0/mapbox-gl.js"></script>
     <style>
-    body { margin: 0; padding: 0; }
-    #map { position: absolute; top: 5%; bottom: 0; width: 100%; }
+        body { margin: 0; padding: 0; }
+        #map { position: absolute; top: 5%; bottom: 0; width: 100%; }
+        .mapboxgl-popup {
+            max-width: 400px;
+            font:
+                12px/20px "PT Serif Bold",
+                Arial,
+                Helvetica;
+        }
     </style>
     <!-- Include the spinGlobe.js file -->
     <script src="src/spin_globe.js"></script>
@@ -39,7 +46,7 @@
     map.on('load', () => {
         spinGlobe(map, spinEnabled, userInteracting, maxSpinZoom, slowSpinZoom, secondsPerRevolution);
         console.log('Map loaded');
-        map.addSource('current-locations', {
+        map.addSource('locations', {
             type: 'geojson',
             data: 'https://raw.githubusercontent.com/t968rs/carrierGroupMovement/master/data/locations.geojson'
             });
@@ -48,10 +55,18 @@
                   if (error) throw error;
                   map.addImage('blue-ac', image);
                 });
+        map.loadImage('mapbox-markers/gray_carrier1.png', (error, image) => {
+                  if (error) throw error;
+                  map.addImage('gray-ac', image);
+                });
+        map.loadImage('mapbox-markers/green_carrier1.png', (error, image) => {
+                  if (error) throw error;
+                  map.addImage('green-ac', image);
+                });
         map.addLayer({
                       id: 'carrier-group-locations',
                       type: 'symbol',
-                      source: 'current-locations',
+                      source: 'locations',
                       filter: ["all",["match",["get", "tm_domain"],["Current"],true,false]],
                       layout: {
                         'icon-image': 'blue-ac', // Use the loaded image as the marker
@@ -79,8 +94,56 @@
             // Copy coordinates array.
             const coordinates = e.features[0].geometry.coordinates.slice();
             const description = e.features[0].properties.description;
-            // const mission = e.features[0].properties.current_mi;
-            // const hull_id = e.features[0].properties.hull_id;
+            const feature = e.features[0];
+
+                    // Display a popup with attributes/columns from the clicked feature
+                    new mapboxgl.Popup()
+                        .setLngLat(coordinates)
+                        .setHTML(description)
+                        .addTo(map);
+
+                    // Add a new layer (e.g., highlight layer or filtered layer)
+                    map.addLayer({
+                        id: 'highlighted-carrier',
+                        type: 'circle',
+                        source: {
+                            type: 'geojson',
+                            data: {
+                                type: 'FeatureCollection',
+                                features: [feature] // Only the clicked feature
+                            }
+                        },
+                        paint: {
+                            'circle-radius': 8,
+                            'circle-color': '#ff0000'
+                        }
+                    });
+
+                    // Add the past and future layers
+                    map.addLayer({
+                        id: 'past-layer',
+                        type: 'symbol',
+                        source: 'locations',
+                        filter: ["all",["match",["get", "tm_domain"],["Past"],true,false]],
+                        layout: {
+                            'icon-image': 'blue-ac', // Use the loaded image as the marker
+                            'icon-size': 0.05,
+                            'icon-allow-overlap': true
+                        }
+                    });
+                    // Add the past and future layers
+                    map.addLayer({
+                        id: 'future-layer',
+                        type: 'symbol',
+                        source: 'locations',
+                        filter: ["all",["match",["get", "tm_domain"],["Future"],true,false]],
+                        layout: {
+                            'icon-image': 'green-ac', // Use the loaded image as the marker
+                            'icon-size': 0.05,
+                            'icon-allow-overlap': true
+                        }
+                    })
+                });
 
             // Ensure that if the map is zoomed out such that multiple
             // copies of the feature are visible, the popup appears
