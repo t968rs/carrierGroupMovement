@@ -1,11 +1,11 @@
 // Function to create popup content
-export function createCarrierPointPopupContent(clickedfeature)
+export function createCarrierPointPopupContent(clickedfeature, alias_mapping)
 {
     let popupContent = '<ul>';
     for (let property in clickedfeature.properties)
     {
         // Use alias if available, otherwise use the original property name
-        const aliasProperty = aliasMapping[property] || property;
+        const aliasProperty = alias_mapping[property] || property;
         if (!["info_src", "cur_miss"].includes(property)) {
             popupContent += `<li><strong>${aliasProperty}</strong>: ${clickedfeature.properties[property]}</li>`
         }
