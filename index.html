@@ -63,7 +63,7 @@
                       id: 'carrier-group-locations',
                       type: 'symbol',
                       source: 'locations',
-                      filter: ["all",["match",["get", "tm_domain"],["Current"],true,false]],
+                      filter: ["all",["match",["get", "Time Domain"],["Current"],true,false]],
                       layout: {
                         'icon-image': 'blue-ac', // Use the loaded image as the marker
                         'icon-size': 0.3,
@@ -121,14 +121,14 @@
 
         if (map.getLayer('past-layer')) {
             map.setFilter('past-layer',
-                ["all", ["match", ["get", "tm_domain"], ["Past"], true, false],
+                ["all", ["match", ["get", "Time Domain"], ["Past"], true, false],
                     hull_filter]);
         } else {
             map.addLayer({
                 id: 'past-layer',
                 type: 'symbol',
                 source: 'locations',
-                filter: ["all", ["match", ["get", "tm_domain"], ["Past"], true, false],
+                filter: ["all", ["match", ["get", "Time Domain"], ["Past"], true, false],
                     hull_filter],
                 layout: {
                     'icon-image': 'gray-ac', // Use the loaded image as the marker
@@ -140,7 +140,7 @@
         if (map.getLayer('future-layer')) {
             map.setFilter('future-layer',
                 ["all",
-                    ["match", ["get", "tm_domain"], ["Future"], true, false],
+                    ["match", ["get", "Time Domain"], ["Future"], true, false],
                     hull_filter]);
         } else {
             // Add the past and future layers
@@ -149,7 +149,7 @@
                 type: 'symbol',
                 source: 'locations',
                 filter: ["all",
-                    ["match", ["get", "tm_domain"], ["Future"], true, false],
+                    ["match", ["get", "Time Domain"], ["Future"], true, false],
                     hull_filter],
                 layout: {
                     'icon-image': 'green-ac', // Use the loaded image as the marker
