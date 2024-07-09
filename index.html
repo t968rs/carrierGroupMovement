@@ -90,6 +90,7 @@
             // Copy coordinates array.
             const coordinates = e.features[0].geometry.coordinates.slice();
             let hullid = e.features[0].properties.hull_id;
+            let hull_filter = ["==", ["get", "hull_id"], hullid];
             const clickedfeature = e.features[0];
             console.log(clickedfeature.properties);
 
@@ -106,15 +107,27 @@
                         .addTo(map);
 
                     // Add the past and future layers
+                    // Check if past-layer and future-layer exist, and remove them if they do
+
+                        if (map.getLayer('past-layer')) {
+                            map.setFilter('past-layer',
+                            ["all", ["match", ["get", "tm_domain"], ["Past"], true, false],
+                            hull_filter]);
+                            }
+                        if (map.getLayer('future-layer')) {
+                            map.setFilter('future-layer',
+                            ["all",
+                            ["match",["get", "tm_domain"],["Future"],true,false],
+                            hull_filter]);
+                        }
                     map.addLayer({
                         id: 'past-layer',
                         type: 'symbol',
                         source: 'locations',
                         filter: ["all", ["match", ["get", "tm_domain"], ["Past"], true, false],
-                            ["==", ["get", "hull_id"], clickedfeature.properties.hull_id]
-                            ],
+                            hull_filter],
                         layout: {
-                            'icon-image': 'blue-ac', // Use the loaded image as the marker
+                            'icon-image': 'gray-ac', // Use the loaded image as the marker
                             'icon-size': 0.05,
                             'icon-allow-overlap': true
                         }
@@ -126,7 +139,7 @@
                         source: 'locations',
                         filter: ["all",
                             ["match",["get", "tm_domain"],["Future"],true,false],
-                            ["==", ["get", "hull_id"], clickedfeature.properties.hull_id]],
+                           hull_filter],
                         layout: {
                             'icon-image': 'green-ac', // Use the loaded image as the marker
                             'icon-size': 0.05,
