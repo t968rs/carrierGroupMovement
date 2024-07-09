@@ -20,11 +20,12 @@
 <script type="module" src="./src/globe_functions.js"></script>
 <div id="map"></div>
 <script type="module">
-    import { drawRoute } from './src/globe_functions.js';
     // Fetch the alias mapping JSON file
     fetch('column_dictionary.json')
         .then(response => response.json())
-        .then(aliasMapping => {
+        .then(columnDictionaries => {
+            // Create a dictionary of alias mappings
+            const aliasMapping = columnDictionaries['field_aliases'];
             // Function to create popup content
             function createPopupContent(clickedfeature) {
                 let popupContent = '<ul>';
