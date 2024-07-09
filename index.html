@@ -94,10 +94,7 @@
             const clickedfeature = e.features[0];
             console.log(clickedfeature.properties);
 
-            // Close any existing popup
-            if (loc_popup) {
-                loc_popup.remove();
-            }
+
             // Check if past-layer and future-layer exist, and remove them if they do
             if (map.getLayer('past-layer')) {
                 map.removeLayer('past-layer');
