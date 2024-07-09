@@ -90,7 +90,7 @@
     map.on('click', 'carrier-group-locations', (e) => {
             // Copy coordinates array.
             const coordinates = e.features[0].geometry.coordinates.slice();
-            const description = e.features[0].properties.description;
+            const hullid = e.features[0].properties.hull_id;
 
             const clickedfeature = e.features[0];
             console.log(clickedfeature.properties);
@@ -100,7 +100,7 @@
                 loc_popup.remove();
             }
             // Dynamically create HTML content for the popup
-            let popupContent = '<h3>Carrier Info</h3><ul>';
+            let popupContent = '<h3>Carrier: hullid</h3><ul>';
             for (let property in feature.properties) {
                 popupContent += `<li><strong>${property}</strong>: ${feature.properties[property]}</li>`;
                 }
