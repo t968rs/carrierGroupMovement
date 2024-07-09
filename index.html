@@ -120,7 +120,7 @@
     map.on('click', 'carrier-group-locations', (e) => {
         // Copy coordinates array.
         const coordinates = e.features[0].geometry.coordinates.slice();
-        let hullid = e.features[0].properties.hull_id;
+        let hullid = e.features[0].properties.["hull_id"];
         let hull_filter = ["==", ["get", "hull_id"], hullid];
         const clickedfeature = e.features[0];
         console.log(clickedfeature.properties);
