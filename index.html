@@ -87,79 +87,84 @@
 
     // Popups for each layer
     map.on('click', 'carrier-group-locations', (e) => {
-            // Copy coordinates array.
-            const coordinates = e.features[0].geometry.coordinates.slice();
-            let hullid = e.features[0].properties.hull_id;
-            let hull_filter = ["==", ["get", "hull_id"], hullid];
-            const clickedfeature = e.features[0];
-            console.log(clickedfeature.properties);
+        // Copy coordinates array.
+        const coordinates = e.features[0].geometry.coordinates.slice();
+        let hullid = e.features[0].properties.hull_id;
+        let hull_filter = ["==", ["get", "hull_id"], hullid];
+        const clickedfeature = e.features[0];
+        console.log(clickedfeature.properties);
 
-            // Dynamically create HTML content for the popup
-            let popupContent = "<h3>Carrier Info</h3><ul>";
-            for (let property in clickedfeature.properties) {
-                popupContent += `<li><strong>${property}</strong>: ${clickedfeature.properties[property]}</li>`;
-                }
-                popupContent += '</ul>';
-                    // Display a popup with attributes/columns from the clicked feature
-                    loc_popup = new mapboxgl.Popup()
-                        .setLngLat(coordinates)
-                        .setHTML(popupContent)
-                        .addTo(map);
-
-                    // Add the past and future layers
-                    // Check if past-layer and future-layer exist, and remove them if they do
-
-                        if (map.getLayer('past-layer')) {
-                            map.setFilter('past-layer',
-                            ["all", ["match", ["get", "tm_domain"], ["Past"], true, false],
-                            hull_filter]);
-                            }
-                        if (map.getLayer('future-layer')) {
-                            map.setFilter('future-layer',
-                            ["all",
-                            ["match",["get", "tm_domain"],["Future"],true,false],
-                            hull_filter]);
-                        }
-                    map.addLayer({
-                        id: 'past-layer',
-                        type: 'symbol',
-                        source: 'locations',
-                        filter: ["all", ["match", ["get", "tm_domain"], ["Past"], true, false],
-                            hull_filter],
-                        layout: {
-                            'icon-image': 'gray-ac', // Use the loaded image as the marker
-                            'icon-size': 0.05,
-                            'icon-allow-overlap': true
-                        }
-                    });
-                    // Add the past and future layers
-                    map.addLayer({
-                        id: 'future-layer',
-                        type: 'symbol',
-                        source: 'locations',
-                        filter: ["all",
-                            ["match",["get", "tm_domain"],["Future"],true,false],
-                           hull_filter],
-                        layout: {
-                            'icon-image': 'green-ac', // Use the loaded image as the marker
-                            'icon-size': 0.05,
-                            'icon-allow-overlap': true
-                        }
-                    })
-                });
-
-            // Ensure that if the map is zoomed out such that multiple
+        // Ensure that if the map is zoomed out such that multiple
             // copies of the feature are visible, the popup appears
             // over the copy being pointed to.
-            if (['mercator', 'equirectangular'].includes(map.getProjection().name)) {
+            if (['mercator', 'equirectangular'].includes(map.getProjection().name))
+            {
                 while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
                     coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
                 }
             }
 
-        // Remove popup and additional layers when clicking outside of the popup
-        map.on('click', (event) => {
-            if (loc_popup) {
+        // Dynamically create HTML content for the popup
+        let popupContent = "<h3>Carrier Info</h3><ul>";
+        for (let property in clickedfeature.properties) {
+            popupContent += `<li><strong>${property}</strong>: ${clickedfeature.properties[property]}</li>`;
+        }
+        popupContent += '</ul>';
+        // Display a popup with attributes/columns from the clicked feature
+        loc_popup = new mapboxgl.Popup()
+            .setLngLat(coordinates)
+            .setHTML(popupContent)
+            .addTo(map);
+
+        // Add the past and future layers
+        // Check if past-layer and future-layer exist, and remove them if they do
+
+        if (map.getLayer('past-layer')) {
+            map.setFilter('past-layer',
+                ["all", ["match", ["get", "tm_domain"], ["Past"], true, false],
+                    hull_filter]);
+        } else {
+            map.addLayer({
+                id: 'past-layer',
+                type: 'symbol',
+                source: 'locations',
+                filter: ["all", ["match", ["get", "tm_domain"], ["Past"], true, false],
+                    hull_filter],
+                layout: {
+                    'icon-image': 'gray-ac', // Use the loaded image as the marker
+                    'icon-size': 0.05,
+                    'icon-allow-overlap': true
+                }
+            })
+        }
+        if (map.getLayer('future-layer')) {
+            map.setFilter('future-layer',
+                ["all",
+                    ["match", ["get", "tm_domain"], ["Future"], true, false],
+                    hull_filter]);
+        } else {
+            // Add the past and future layers
+            map.addLayer({
+                id: 'future-layer',
+                type: 'symbol',
+                source: 'locations',
+                filter: ["all",
+                    ["match", ["get", "tm_domain"], ["Future"], true, false],
+                    hull_filter],
+                layout: {
+                    'icon-image': 'green-ac', // Use the loaded image as the marker
+                    'icon-size': 0.05,
+                    'icon-allow-overlap': true
+                }
+            })
+        }
+    });
+
+        // Remove popup and additional layers when clicking outside the popup
+        map.on('click', (event) =>
+        {
+            if (loc_popup)
+            {
                 const isClickInsidePopup = loc_popup.isOpen() && loc_popup.getElement().contains(event.originalEvent.target);
 
                 if (!isClickInsidePopup) {
@@ -170,7 +175,7 @@
                                 }
                     if (map.getLayer('future-layer')) {
                         map.removeLayer('future-layer');
-                            }
+                                }
                 }
             }
 
@@ -178,12 +183,14 @@
         });
 
         // Change the cursor to a pointer when the mouse is over the places layer.
-        map.on('mouseenter', 'command-group-locations', () => {
+        map.on('mouseenter', 'command-group-locations', () =>
+        {
             map.getCanvas().style.cursor = 'pointer';
         });
 
         // Change it back to a pointer when it leaves.
-        map.on('mouseleave', 'command-group-locations', () => {
+        map.on('mouseleave', 'command-group-locations', () =>
+        {
             map.getCanvas().style.cursor = '';
         });
 
