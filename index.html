@@ -91,7 +91,10 @@
             // Copy coordinates array.
             const coordinates = e.features[0].geometry.coordinates.slice();
             const description = e.features[0].properties.description;
+
             const clickedfeature = e.features[0];
+            console.log(clickedfeature.properties);
+
             // Close any existing popup
             if (loc_popup) {
                 loc_popup.remove();
