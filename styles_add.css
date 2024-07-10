@@ -24,4 +24,15 @@ body {
             height: auto;
             max-height: 200px;
             overflow-y: auto;
+            font-family: 'Helvetica', sans-serif; /* Set font to Helvetica */
+            font-size: 12px; /* Change font size */
         }
+
+.top-left-popup ul {
+    list-style-type: none; /* Remove bullet points */
+    padding-left: 0; /* Remove default padding */
+}
+
+.top-left-popup li {
+    margin-bottom: 5px; /* Optional: Add some spacing between list items */
+}

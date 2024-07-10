@@ -95,110 +95,127 @@
                 return;
             }
 
-            // Handle the features found
-            const clickedfeature = features[0]; // Use the first feature found, or customize as needed
-            const coordinates = clickedfeature.geometry.coordinates.slice();
-            let hullid = features[0].properties["hull_no"];
-            let hull_filter = ["==", ["get", "hull_no"], hullid];
-            let locid = features[0].properties["loc_id"];
-            let loc_filter = ["==", ["get", "loc_id"], locid];
-            console.log(clickedfeature.properties);
-            console.log("Hull Filter: ", hull_filter);
-
-            // Ensure that if the map is zoomed out such that multiple
-            // copies of the feature are visible, the popup appears
-            // over the copy being pointed to.
-            if (['mercator', 'equirectangular'].includes(map.getProjection().name)) {
-                while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
-                    coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
-                }
-            }
-
+            console.log('Features found')
             // Remove any existing popup to prevent content from appending
             if (loc_popup) {
                 loc_popup.remove();
             }
 
-            // Dynamically create HTML content for the popup
-            const mapPopupContent = await createCarrierPointPopupContent(clickedfeature);
-            // Create the popup
-            new mapboxgl.Popup({
-                closeButton: true,
-                closeOnClick: true,
-                anchor: 'bottom', // Adjust anchor as needed (bottom, top, left, right)
-                offset: [0, -15] // Adjust offset as needed to make sure popup is visible
-            })
+            // Handle the features found
+            for (const clickedfeature of features) {
+                const coordinates = clickedfeature.geometry.coordinates.slice();
+                let hullid = features[0].properties["hull_no"];
+                let hull_filter = ["==", ["get", "hull_no"], hullid];
+                let locid = features[0].properties["loc_id"];
+                let loc_filter = ["==", ["get", "loc_id"], locid];
 
-            // Display a popup with attributes/columns from the clicked feature
-            loc_popup = new mapboxgl.Popup()
-                .setLngLat(coordinates)
-                .setHTML(mapPopupContent)
-                .addTo(map);
+                // Ensure that if the map is zoomed out such that multiple
+                // copies of the feature are visible, the popup appears
+                // over the copy being pointed to.
+                if (['mercator', 'equirectangular'].includes(map.getProjection().name)) {
+                    while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+                        coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+                    }
+                }
 
-            // Add the past and future layers
-            if (map.getLayer('past-layer')) {
-                console.log('Past layer exists');
-                map.setFilter('past-layer',
-                    ["all", ["match", ["get", "tm_domain"], ["Past"], true, false],
-                        hull_filter]);
-            } else {
-                console.log('Past layer does not exist')
-                map.addLayer({
-                    id: 'past-layer',
-                    type: 'symbol',
-                    source: 'locations',
-                    filter: ["all", ["match", ["get", "tm_domain"], ["Past"], true, false],
-                        hull_filter],
-                    layout: {
-                        'icon-image': 'gray-ac', // Use the loaded image as the marker
-                        'icon-size': 0.075,
-                        'icon-allow-overlap': true
+                console.log(clickedfeature.properties);
+                console.log("Hull Filter: ", hull_filter);
+                console.log(clickedfeature.properties);
+
+                const clickedLayer = clickedfeature.layer.id;
+                if (['route-layer'].includes(clickedLayer)) {
+                    console.log('Route layer clicked');
+                    const sidepopupContent = await createRouteLinePopupContent(clickedfeature);
+                    // Update custom popup content and display it
+                    const routePopup = document.getElementById('top-left-popup');
+                    routePopup.innerHTML = `<ul>${sidepopupContent}</ul>`;
+                    routePopup.style.display = 'block';
+                    return;
+                }
+
+                else if (['command-group-locations'].includes(clickedLayer)){
+                    // Dynamically create HTML content for the popup
+                    const mapPopupContent = await createCarrierPointPopupContent(clickedfeature);
+                    // Create the popup
+                    new mapboxgl.Popup({
+                        closeButton: true,
+                        closeOnClick: true,
+                        anchor: 'bottom', // Adjust anchor as needed (bottom, top, left, right)
+                        offset: [0, -15] // Adjust offset as needed to make sure popup is visible
+                    })
+                    // Display a popup with attributes/columns from the clicked feature
+                    loc_popup = new mapboxgl.Popup()
+                        .setLngLat(coordinates)
+                        .setHTML(mapPopupContent)
+                        .addTo(map);
+                    // Add the past and future layers
+                    if (map.getLayer('past-layer')) {
+                        console.log('Past layer exists');
+                        map.setFilter('past-layer',
+                            ["all", ["match", ["get", "tm_domain"], ["Past"], true, false],
+                                hull_filter]);
+                    } else {
+                        console.log('Past layer does not exist')
+                        map.addLayer({
+                            id: 'past-layer',
+                            type: 'symbol',
+                            source: 'locations',
+                            filter: ["all", ["match", ["get", "tm_domain"], ["Past"], true, false],
+                                hull_filter],
+                            layout: {
+                                'icon-image': 'gray-ac', // Use the loaded image as the marker
+                                'icon-size': 0.075,
+                                'icon-allow-overlap': true
+                            }
+                        })
+                    }
+                // Future layer
+                if (map.getLayer('future-layer')) {
+                    console.log('Future layer exists');
+                    map.setFilter('future-layer',
+                        ["all",
+                            ["match", ["get", "tm_domain"], ["Future"], true, false],
+                            hull_filter]);
+                }
+                else {
+                    console.log('Future layer does not exist')
+                    // Add future layers
+                    map.addLayer({
+                        id: 'future-layer',
+                        type: 'symbol',
+                        source: 'locations',
+                        filter: ["all",
+                            ["match", ["get", "tm_domain"], ["Future"], true, false],
+                            hull_filter],
+                        layout: {
+                            'icon-image': 'green-ac', // Use the loaded image as the marker
+                            'icon-size': 0.075,
+                            'icon-allow-overlap': true
+                        }
+                    })
+                }
+                // Route Layer
+                if (map.getLayer('route-layer')) {
+                    console.log('Route layer exists');
+                    map.setFilter('route-layer', loc_filter);
+                }
+                else {
+                    console.log('Route layer does not exist')
+                    map.addLayer({
+                        id: 'route-layer',
+                        type: 'line',
+                        source: 'routes',
+                        filter: loc_filter,
+                        paint: {
+                            'line-color': '#028663',
+                            'line-width': 2
                     }
                 })
             }
-
-            // Future layer
-            if (map.getLayer('future-layer')) {
-                console.log('Future layer exists');
-                map.setFilter('future-layer',
-                    ["all",
-                        ["match", ["get", "tm_domain"], ["Future"], true, false],
-                        hull_filter]);
-            } else {
-                console.log('Future layer does not exist')
-                // Add future layers
-                map.addLayer({
-                    id: 'future-layer',
-                    type: 'symbol',
-                    source: 'locations',
-                    filter: ["all",
-                        ["match", ["get", "tm_domain"], ["Future"], true, false],
-                        hull_filter],
-                    layout: {
-                        'icon-image': 'green-ac', // Use the loaded image as the marker
-                        'icon-size': 0.075,
-                        'icon-allow-overlap': true
-                    }
-                })
+                }
             }
 
-            // Route Layer
-            if (map.getLayer('route-layer')) {
-                console.log('Route layer exists');
-                map.setFilter('route-layer', loc_filter);
-            } else {
-                console.log('Route layer does not exist')
-                map.addLayer({
-                    id: 'route-layer',
-                    type: 'line',
-                    source: 'routes',
-                    filter: loc_filter,
-                    paint: {
-                        'line-color': '#028663',
-                        'line-width': 2
-                    }
-                })
-            }
+
         });
 
         /*// Popups for each layer

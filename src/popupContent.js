@@ -4,7 +4,7 @@
 let unwanted = ["OID_", "OID", "OBJECTID", "info_src", "cur_miss", "loc_id", "route_id"];
 export async function createCarrierPointPopupContent(clickedfeature) {
     // Fetch the alias mapping JSON file
-    let popupContent = '<ul>';
+    let popupContent = '';
     const response = await fetch('./data/locations_columns.json');
     const columnDictionaries = await response.json();
     const aliasMapping = columnDictionaries['field_aliases'];
@@ -13,10 +13,10 @@ export async function createCarrierPointPopupContent(clickedfeature) {
         // Use alias if available, otherwise use the original property name
         const aliasProperty = aliasMapping[property] || property;
         if (!unwanted.includes(property)) {
-            popupContent += `<li><strong>${aliasProperty}</strong>: ${clickedfeature.properties[property]}</li>`
+            popupContent += `<p><strong>${aliasProperty}</strong>: ${clickedfeature.properties[property]}</p>`
         } else if (property === "cur_miss") {
             let shorterText = clickedfeature.properties[property].substring(0, 42)
-            popupContent += `<li><strong>${aliasProperty}</strong>: ${shorterText}</li>`
+            popupContent += `<p><strong>${aliasProperty}</strong>: ${shorterText}</p>`
         }
     }
     return popupContent;
@@ -24,7 +24,7 @@ export async function createCarrierPointPopupContent(clickedfeature) {
 
 export async function createRouteLinePopupContent(clickedfeature) {
     // Fetch the alias mapping JSON file
-    let popupContent = '<ul>';
+    let popupContent = '';
     const response = await fetch('./data/routes_columns.json');
     const columnDictionaries = await response.json();
     const aliasMapping = columnDictionaries['field_aliases'];
@@ -35,10 +35,10 @@ export async function createRouteLinePopupContent(clickedfeature) {
         // Use alias if available, otherwise use the original property name
         const aliasProperty = aliasMapping[property] || property;
         if (!unwanted.includes(property)) {
-            popupContent += `<li><strong>${aliasProperty}</strong>: ${clickedfeature.properties[property]}</li>`
+            popupContent += `<p><strong>${aliasProperty}</strong>: ${clickedfeature.properties[property]}</p>`
         } else if (property === "cur_miss") {
             let shorterText = clickedfeature.properties[property].substring(0, 42)
-            popupContent += `<li><strong>${aliasProperty}</strong>: ${shorterText}</li>`
+            popupContent += `<p><strong>${aliasProperty}</strong>: ${shorterText}</p>`
         }
     }
     return popupContent;

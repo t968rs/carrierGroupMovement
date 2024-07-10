@@ -155,6 +155,9 @@ class UpdateSeaRoutes:
 
     @staticmethod
     def cleanup_all_routes(gdf, ids_to_remove=None):
+        # Round lengths to 1 decimal place
+        gdf['length_miles'] = gdf['length_miles'].round(1)
+
         gdf.sort_values(by=["length_miles"], inplace=True, ascending=False)
         gdf = gdf.drop_duplicates(["loc_id", "tm_domain"], keep="first")
         unique_ids = list(set(gdf['loc_id'].values.tolist()))
