@@ -11,7 +11,7 @@
 <body>
 
     <div id="map"></div>
-    <div id="top-left-popup" class="top-left-popup" style="display: none;"></div>
+<!--    <div id="top-left-popup" class="top-left-popup" style="display: none;"</div>-->
 
     <script type="module">
         // Import the createPopupContent function
@@ -186,7 +186,7 @@
             }
         });
 
-        // Popups for each layer
+        /*// Popups for each layer
         map.on('click', 'route-layer', async function (e) {
             const clickedFeature = e.features[0];
             const sidepopupContent = await createRouteLinePopupContent(clickedFeature);
@@ -208,7 +208,7 @@
             if (!features.length) {
                 document.getElementById('custom-popup').style.display = 'none';
             }
-        });
+        });*/
 
         // Change the cursor to a pointer when the mouse is over the places layer.
         map.on('mouseenter', 'command-group-locations', () => {
