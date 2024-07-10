@@ -15,7 +15,7 @@ class WriteNewGeoJSON:
         self.set_attributes_from_dict(field_dicts)
         self.server_path = os.path.split(__file__)[0]
         self.shp_path = "../data/esri_exports/locations.shp"
-        self.output_folder = os.path.split(self.shp_path)[0]
+        self.output_folder = "../data/"
         self.crs = None
         self.gdf = None
         self.c_list = None
@@ -49,6 +49,7 @@ class WriteNewGeoJSON:
             gdf = gpd.read_file(self.shp_path)
 
         self.crs = gdf.crs
+        gdf = gdf.explode(ignore_index=True)
         gdf = self.add_numbered_primary_key(gdf, 'loc_id')
         self.c_list = [c for c in gdf.columns.to_list()]
         print(f'   Input Columns: {self.c_list}, \n   CRS: {self.crs}')
