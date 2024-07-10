@@ -25,7 +25,7 @@ export async function createRouteLinePopupContent(clickedfeature) {
     const response = await fetch('./data/routes_columns.json');
     const columnDictionaries = await response.json();
     const aliasMapping = columnDictionaries['field_aliases'];
-    console.log("Alias Mapping: ", Object.keys(aliasMapping));
+    console.log("Route Alias Mapping: ", Object.keys(aliasMapping));
     for (let property in clickedfeature.properties) {
         // Use alias if available, otherwise use the original property name
         const aliasProperty = alias_mapping[property] || property;
