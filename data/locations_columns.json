@@ -4,11 +4,12 @@
         "hull_id": "Hull ID",
         "tm_domain": "Time Domain",
         "type": "Command Type",
-        "loc_miss": "Location Mission",
-        "status": "Status",
+        "miss_type": "Mission Type",
+        "status_type": "Location Status",
         "info_src": "Info Source",
         "deprt_date": "Departure Date",
-        "loc_date": "Location Date"
+        "loc_date": "Location Date",
+        "miss_det": "Mission Details"
 
     },
     "data_types": {
@@ -16,11 +17,12 @@
         "hull_id": "object",
         "tm_domain": "object",
         "type": "object",
-        "loc_miss": "object",
-        "status": "object",
+        "miss_type": "object",
+        "status_type": "object",
         "info_src": "object",
         "deprt_date": "datetime64[s]",
-        "loc_date": "datetime64[s]"
+        "loc_date": "datetime64[s]",
+        "miss_det": "object"
 
     }
 }

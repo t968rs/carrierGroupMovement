@@ -137,14 +137,10 @@ class UpdateSeaRoutes:
             dates['Past']['End'] = target_date
 
         # Find the next future-dated point
-        future_points = gdf_thishull[gdf_thishull['loc_date'] > target_date]
-        # future_points.to_file(os.path.join(os.path.split(__file__)[0], f"future_points_{hull_id}.geojson"),
-        #                       driver="GeoJSON")
+        future_points = gdf_thishull[gdf_thishull['tm_domain'] == "Future"]
         if future_points.empty:
-            future_points = gdf_thishull[gdf_thishull['tm_domain'] == "Future"]
-            if future_points.empty:
-                point_dict['Future'] = None
-                dates['Future']['End'] = None
+            point_dict['Future'] = None
+            dates['Future']['End'] = None
         else:
             point_dict['Future'] = (future_points.iloc[0].geometry.x.astype('float64'),
                                     future_points.iloc[0].geometry.y.astype('float64'))
