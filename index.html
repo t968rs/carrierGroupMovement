@@ -9,13 +9,14 @@
     <script src="https://api.mapbox.com/mapbox-gl-js/v3.4.0/mapbox-gl.js"></script>
 </head>
 <body>
-<div id="custom-popup" class="top-left-popup" style="display: none;"></div>
+
 <div id="map"></div>
+<div id="custom-popup" className="top-left-popup" style="display: none;"></div>
 <script type="module">
     // Import the createPopupContent function
-    import { createCarrierPointPopupContent, createRouteLinePopupContent } from './src/popupContent.js';
+    import {createCarrierPointPopupContent, createRouteLinePopupContent} from './src/popupContent.js';
 
-	mapboxgl.accessToken = 'pk.eyJ1IjoidDk2OHJzIiwiYSI6ImNpamF5cTcxZDAwY2R1bWx4cWJvd3JtYXoifQ.XqJkBCgSJeCCeF_yugpG5A';
+    mapboxgl.accessToken = 'pk.eyJ1IjoidDk2OHJzIiwiYSI6ImNpamF5cTcxZDAwY2R1bWx4cWJvd3JtYXoifQ.XqJkBCgSJeCCeF_yugpG5A';
     const map = new mapboxgl.Map({
         container: 'map',
         style: 'mapbox://styles/t968rs/cly4kadyt00c401r19uqr7c8e',
@@ -115,8 +116,7 @@
         // Ensure that if the map is zoomed out such that multiple
         // copies of the feature are visible, the popup appears
         // over the copy being pointed to.
-        if (['mercator', 'equirectangular'].includes(map.getProjection().name))
-        {
+        if (['mercator', 'equirectangular'].includes(map.getProjection().name)) {
             while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
                 coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
             }
@@ -205,7 +205,7 @@
     });
 
     // Popups for each layer
-    map.on('click', 'route-layer' , async function(e) {
+    map.on('click', 'route-layer', async function (e) {
         const clickedFeature = e.features[0];
         const sidepopupContent = await createRouteLinePopupContent(clickedFeature);
 
@@ -218,7 +218,7 @@
         map.panTo(e.lngLat);
     });
 
-    map.on('click', function(e) {
+    map.on('click', function (e) {
         const features = map.queryRenderedFeatures(e.point, {
             layers: ['myLayer'] // Specify the layers you want to check
         });
@@ -228,20 +228,17 @@
         }
     });
 
-        // Change the cursor to a pointer when the mouse is over the places layer.
-        map.on('mouseenter', 'command-group-locations', () =>
-        {
-            console.log(' Mouse entered')
-            map.getCanvas().style.cursor = 'pointer';
-        });
+    // Change the cursor to a pointer when the mouse is over the places layer.
+    map.on('mouseenter', 'command-group-locations', () => {
+        console.log(' Mouse entered')
+        map.getCanvas().style.cursor = 'pointer';
+    });
 
-        // Change it back to a pointer when it leaves.
-        map.on('mouseleave', 'command-group-locations', () =>
-        {
-            console.log(' Mouse left')
-            map.getCanvas().style.cursor = '';
-        });
-
+    // Change it back to a pointer when it leaves.
+    map.on('mouseleave', 'command-group-locations', () => {
+        console.log(' Mouse left')
+        map.getCanvas().style.cursor = '';
+    });
 
 </script>
 
