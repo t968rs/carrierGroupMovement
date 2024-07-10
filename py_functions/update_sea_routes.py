@@ -50,7 +50,7 @@ class UpdateSeaRoutes:
             setattr(self, k, v)
 
     @staticmethod
-    def get_target_date(gdf: gpd.GeoDataFrame, hull_id: str, tm_domain: datetime):
+    def get_target_date(gdf: gpd.GeoDataFrame, hull_id: str, tm_domain: str):
         # Filter by hull_id
         filtered_gdf = gdf[gdf['hull_id'] == hull_id]
         print(f'HULL: {hull_id}')
@@ -86,7 +86,8 @@ class UpdateSeaRoutes:
                  "Future": {"Start": target_date, "End": None}}
 
         # Find the target point
-        target_points = gdf[gdf['loc_date'] == target_date]
+        gdf_thishull = gdf[gdf['hull_id'] == hull_id]
+        target_points = gdf_thishull[gdf['loc_date'] == target_date]
         if target_points.empty:
             point_dict['Current'] = None
         else:
@@ -94,7 +95,7 @@ class UpdateSeaRoutes:
                                      target_points.iloc[0].geometry.y.astype('float64'))
 
         # Find the most recent past-dated point
-        past_points = gdf[gdf['loc_date'] < target_date]
+        past_points = gdf_thishull[gdf_thishull['loc_date'] < target_date]
         if past_points.empty:
             point_dict['Past'] = None
             dates['Past']['Start'] = None
@@ -104,16 +105,16 @@ class UpdateSeaRoutes:
             dates['Past']['Start'] = past_points.iloc[-1].loc_date
 
         # Find the next future-dated point
-        future_points = gdf[gdf['loc_date'] > target_date]
+        future_points = gdf_thishull[gdf_thishull['loc_date'] > target_date]
         if future_points.empty:
-            future_points = gdf[gdf['tm_domain'] == "Future"]
+            future_points = gdf_thishull[gdf_thishull['tm_domain'] == "Future"]
             if future_points.empty:
                 point_dict['Future'] = None
                 dates['Future']['End'] = None
-        if not future_points.empty:
-            point_dict['Future'] = (future_points.iloc[0].geometry.x.astype('float64'),
-                                    future_points.iloc[0].geometry.y.astype('float64'))
-            dates['Future']['End'] = future_points.iloc[0].loc_date
+            else:
+                point_dict['Future'] = (future_points.iloc[0].geometry.x.astype('float64'),
+                                        future_points.iloc[0].geometry.y.astype('float64'))
+                dates['Future']['End'] = future_points.iloc[0].loc_date
 
         dates = convert_date_dictionary(dates)
 
@@ -150,7 +151,7 @@ class UpdateSeaRoutes:
         self.c_list = [c for c in gdf.columns.to_list()]
         print(f'Columns: {self.c_list}, \nCRS: {self.crs}')
 
-        unique_hull_ids = gdf['hull_id'].unique()
+        unique_hull_ids = list(set(gdf['hull_id'].values.tolist()))
         print(f'Unique Hull IDs: {unique_hull_ids}')
         # Initialize an empty GeoDataFrame
         all_lines_gdf = gpd.GeoDataFrame(columns=['geometry', 'tm_domain', 'start_date', 'end_date',
@@ -164,7 +165,7 @@ class UpdateSeaRoutes:
             filtered_gdf = filtered_gdf[filtered_gdf['loc_date'] == target_date]
             loc_id = filtered_gdf['loc_id'].values[0]
 
-            point_lookup, dates_lookup = self.find_relevant_points(filtered_gdf, target_date)
+            point_lookup, dates_lookup = self.find_relevant_points(gdf, target_date, hull_id=ident)
 
             # Get the routes
             lines = {"Past": None, "Future": None}
