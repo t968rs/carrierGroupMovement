@@ -7,6 +7,7 @@
     <link href="https://api.mapbox.com/mapbox-gl-js/v3.4.0/mapbox-gl.css" rel="stylesheet">
     <link href="styles_add.css" rel="stylesheet">
     <script src="https://api.mapbox.com/mapbox-gl-js/v3.4.0/mapbox-gl.js"></script>
+    <script src="./src/map_functionality.js" type="module"></script>
 </head>
 <body>
 
@@ -130,6 +131,7 @@
                     const routePopup = document.getElementById('top-left-popup');
                     routePopup.innerHTML = `<ul>${sidepopupContent}</ul>`;
                     routePopup.style.display = 'block';
+                    fitMapToLayerBounds('route-layer');
                     return;
                 }
 
@@ -217,20 +219,6 @@
 
 
         });
-
-        /*// Popups for each layer
-        map.on('click', 'route-layer', async function (e) {
-            const clickedFeature = e.features[0];
-            const sidepopupContent = await createRouteLinePopupContent(clickedFeature);
-
-            // Update custom popup content and display it
-            const routePopup = document.getElementById('top-left-popup-popup');
-            routePopup.innerHTML = `<ul>${sidepopupContent}</ul>`;
-            routePopup.style.display = 'block';
-
-            // Optionally, pan the map to ensure the feature is visible
-            map.panTo(e.lngLat);
-        });*/
 
         // Change the cursor to a pointer when the mouse is over the places layer.
         map.on('mouseenter', 'command-group-locations', () => {
