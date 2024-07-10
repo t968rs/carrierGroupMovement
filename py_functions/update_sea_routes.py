@@ -5,8 +5,8 @@ import numpy as np
 import json
 from shapely.geometry import LineString
 # from scgraph.geographs.oak_ridge_maritime import oak_ridge_maritime_geograph as sea_routes
-from scgraph.geographs.marnet import marnet_geograph as sea_routes
-from datetime import datetime
+#from scgraph.geographs.marnet import marnet_geograph as sea_routes
+import searoute as sea_routes
 
 
 # Import json as dictionary
@@ -71,6 +71,32 @@ class UpdateSeaRoutes:
             return None
 
     @staticmethod
+    def line_to_gdf(line, tm_domain, start_date, end_date, hull_id, loc_id):
+        # Create the GeoDataFrames
+        # print(f'\n\n')
+        # for time_domain, line in lines.items():
+        #     print(f' {ident} {time_domain} Current-Date Loc: {c_loc_id}\n  line: {line}')
+        #     if line is not None:
+        #         print(f' {ident} {time_domain} line exists...')
+        #         route_length = route_lengths[time_domain]
+        #         start_date = dates_lookup[time_domain]['Start']
+        #         end_date = dates_lookup[time_domain]['End']
+        #         print(f' Length: {route_length}, \n Start: {start_date}, \n End: {end_date}')
+        #         lines_gdf = gpd.GeoDataFrame({"tm_domain": [time_domain],
+        #                                       "hull_id": [ident],
+        #                                       "geometry": [line],
+        #                                       "length_miles": [round(route_length, 1)],
+        #                                       "start_date": [start_date], "end_date": [end_date],
+        #                                       "loc_id": [c_loc_id]},
+        #                                      geometry="geometry", crs=self.crs)
+        #         print(f'Lines GDF: \n{lines_gdf}')
+        #         print(f'Lines GDF geo: \n{lines_gdf.geometry}')
+        #         print(f'Lines GDF c: \n{lines_gdf.columns.to_list()}')
+        return gpd.GeoDataFrame(geometry=[line], crs="EPSG:4326",
+                                data={'tm_domain': [tm_domain], 'start_date': [start_date],
+                                      'end_date': [end_date], 'hull_id': [hull_id], 'loc_id': [loc_id]})
+
+    @staticmethod
     def find_relevant_points(gdf_thishull, target_date, hull_id=None):
 
         if gdf_thishull.empty:
@@ -96,7 +122,8 @@ class UpdateSeaRoutes:
 
         # Find the most recent past-dated point
         past_points = gdf_thishull[gdf_thishull['loc_date'] < target_date]
-        past_points.to_file(os.path.join(os.path.split(__file__)[0], f"past_points_{hull_id}.geojson"), driver="GeoJSON")
+        # past_points.to_file(os.path.join(os.path.split(__file__)[0], f"past_points_{hull_id}.geojson"),
+        #                     driver="GeoJSON")
         print(f'\n--{hull_id} Past Points: \n{past_points}')
         if past_points.empty:
             point_dict['Past'] = None
@@ -110,7 +137,8 @@ class UpdateSeaRoutes:
 
         # Find the next future-dated point
         future_points = gdf_thishull[gdf_thishull['loc_date'] > target_date]
-        future_points.to_file(os.path.join(os.path.split(__file__)[0], f"future_points_{hull_id}.geojson"), driver="GeoJSON")
+        # future_points.to_file(os.path.join(os.path.split(__file__)[0], f"future_points_{hull_id}.geojson"),
+        #                       driver="GeoJSON")
         if future_points.empty:
             future_points = gdf_thishull[gdf_thishull['tm_domain'] == "Future"]
             if future_points.empty:
@@ -141,15 +169,14 @@ class UpdateSeaRoutes:
         :param end: list of x,y coordinates for the end point
         :return: list of x,y coordinates for the shortest path
         """
-
         # Get the shortest path between two points
-        origin_point = {'latitude': start[1], 'longitude': start[0]}
-        dest_point = {'latitude': end[1], 'longitude': end[0]}
-        print(f'   Origin: {origin_point}, \n   Destination: {dest_point}')
-        route = sea_routes.get_shortest_path(origin_point, dest_point, "mi",
-                                             node_addition_math="haversine", node_addition_circuity=10)
-        print(f'  Route: {route["length"]}')
-        return route['coordinate_path'], route['length']
+        # origin_point = {'latitude': start[1], 'longitude': start[0]}
+        # dest_point = {'latitude': end[1], 'longitude': end[0]}
+        print(f'   Origin: {start}, \n   Destination: {end}')
+        route = sea_routes.searoute(start, end,
+                                    "mi", append_orig_dest=True)
+        # print(f'  Route: {route.geometry}, Length: {route.properties["length"]}')
+        return route, route.properties['length']
 
     def create_routes(self):
 
@@ -161,58 +188,69 @@ class UpdateSeaRoutes:
 
         unique_hull_ids = list(set(gdf['hull_id'].values.tolist()))
         print(f'Unique Hull IDs: {unique_hull_ids}')
+
         # Initialize an empty GeoDataFrame
-        all_lines_gdf = gpd.GeoDataFrame(columns=['geometry', 'tm_domain', 'start_date', 'end_date',
-                                                  'hull_id', 'loc_id'],
+
+        all_lines_gdf = gpd.GeoDataFrame(columns=list(self.field_aliases.keys()) + ['geometry'],
                                          crs=self.crs)
 
         for ident in unique_hull_ids:
+            # init columns dictionary (fresh)
+            fields_dict = {k: None for k in self.field_aliases.keys()}
+            fields_dict['geometry'] = None
+
             # Find the relevant points
             target_date = self.get_target_date(gdf=gdf, hull_id=ident, tm_domain="Current")
             hull_gdf = gdf[gdf['hull_id'] == ident]
             current_gdf = hull_gdf[hull_gdf['tm_domain'] == "Current"]
             c_loc_id = current_gdf['loc_id'].values[0]
+            fields_dict['loc_id'] = c_loc_id
+            fields_dict['hull_id'] = ident
 
             point_lookup, dates_lookup = self.find_relevant_points(hull_gdf, target_date, hull_id=ident)
 
             # Get the routes
-            lines = {"Past": None, "Future": None}
-            route_lengths = {"Past": None, "Future": None}
             if point_lookup["Past"] and point_lookup["Current"]:
-                past_route, route_lengths["Past"] = self.get_routes(point_lookup["Past"], point_lookup["Current"])
-                lines["Past"] = LineString(past_route)
-                p_loc_id = gdf[(gdf['hull_id'] == ident) & (gdf['loc_date'] == dates_lookup["Past"]["Start"])]
+                fields_dict['start_date'] = dates_lookup['Past']['Start']
+                fields_dict['end_date'] = dates_lookup['Past']['End']
+                # noinspection PyTypeChecker
+                fields_dict['tm_domain'] = "Past"
+                route, fields_dict["length_miles"] = self.get_routes(point_lookup["Past"],
+                                                                     point_lookup["Current"])
+                # Convert geojson to dictionary and gdf
+                line = LineString(route.geometry['coordinates'])
+                fields_dict['geometry'] = line
+                temp_gdf = gpd.GeoDataFrame([fields_dict], columns=list(self.field_aliases.keys()) + ['geometry'],
+                                            crs=self.crs, geometry='geometry')
+                if not all_lines_gdf.empty:
+                    all_lines_gdf = gpd.GeoDataFrame(pd.concat([all_lines_gdf, temp_gdf],
+                                                               ignore_index=True), crs=self.crs)
+                else:
+                    all_lines_gdf = temp_gdf
+
             if point_lookup["Current"] and point_lookup["Future"]:
-                future_route, route_lengths['Future'] = self.get_routes(point_lookup["Current"], point_lookup["Future"])
-                lines['Future'] = LineString(future_route)
-                f_loc_id = gdf[(gdf['hull_id'] == ident) & (gdf['loc_date'] == dates_lookup["Future"]["End"])]
+                fields_dict['start_date'] = dates_lookup['Future']['Start']
+                fields_dict['end_date'] = dates_lookup['Future']['End']
+                # noinspection PyTypeChecker
+                fields_dict['tm_domain'] = "Future"
+                route, fields_dict["length_miles"] = self.get_routes(point_lookup["Current"],
+                                                                     point_lookup["Future"])
+                # Convert geojson to dictionary and gdf
+                line = LineString(route.geometry['coordinates'])
+                fields_dict['geometry'] = line
+                temp_gdf = gpd.GeoDataFrame([fields_dict],
+                                            columns=list(self.field_aliases.keys()) + ['geometry'],
+                                            crs=self.crs, geometry='geometry')
 
-            # Create the GeoDataFrames
-            print(f'\n\n')
-            for time_domain, line in lines.items():
-                print(f' {ident} {time_domain} Current-Date Loc: {c_loc_id}\n  line: {line}')
-                if line is not None:
-                    print(f' {ident} {time_domain} line exists...')
-                    route_length = route_lengths[time_domain]
-                    start_date = dates_lookup[time_domain]['Start']
-                    end_date = dates_lookup[time_domain]['End']
-                    print(f' Length: {route_length}, \n Start: {start_date}, \n End: {end_date}')
-                    lines_gdf = gpd.GeoDataFrame({"tm_domain": [time_domain],
-                                                  "hull_id": [ident],
-                                                  "geometry": [line],
-                                                  "length_miles": [round(route_length, 1)],
-                                                  "start_date": [start_date], "end_date": [end_date],
-                                                  "loc_id": [c_loc_id]},
-                                                 geometry="geometry", crs=self.crs)
-                    print(f'Lines GDF: \n{lines_gdf}')
-                    print(f'Lines GDF geo: \n{lines_gdf.geometry}')
-                    print(f'Lines GDF c: \n{lines_gdf.columns.to_list()}')
-
-                    all_lines_gdf = pd.concat([all_lines_gdf, lines_gdf], ignore_index=True)
+                if not all_lines_gdf.empty:
+                    all_lines_gdf = gpd.GeoDataFrame(pd.concat([all_lines_gdf, temp_gdf],
+                                                               ignore_index=True), crs=self.crs)
+                else:
+                    all_lines_gdf = temp_gdf
 
         # Save the GeoDataFrames
         all_lines_gdf = all_lines_gdf.astype(self.data_types)
-        print(f'All Lines GDF: \n{all_lines_gdf.drop(columns=["geometry"])}')
+        print(f'All Lines GDF: \n{all_lines_gdf}')
         all_lines_gdf.to_file(os.path.join(self.output_folder, "routes.geojson"), driver="GeoJSON")
         print(f"Saved routes to {self.output_folder} as routes.json")
 
