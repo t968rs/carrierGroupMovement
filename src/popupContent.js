@@ -1,6 +1,7 @@
 // Function to create popup content
 
 let popupContent = '<ul>';
+let unwanted = ["OID_", "OID", "OBJECTID", "info_src", "cur_miss"];
 export async function createCarrierPointPopupContent(clickedfeature) {
     // Fetch the alias mapping JSON file
     const response = await fetch('./data/locations_columns.json');
@@ -10,7 +11,7 @@ export async function createCarrierPointPopupContent(clickedfeature) {
     for (let property in clickedfeature.properties) {
         // Use alias if available, otherwise use the original property name
         const aliasProperty = aliasMapping[property] || property;
-        if (!["info_src", "cur_miss"].includes(property)) {
+        if (!unwanted.includes(property)) {
             popupContent += `<li><strong>${aliasProperty}</strong>: ${clickedfeature.properties[property]}</li>`
         } else if (property === "cur_miss") {
             let shorterText = clickedfeature.properties[property].substring(0, 42)
@@ -26,10 +27,12 @@ export async function createRouteLinePopupContent(clickedfeature) {
     const columnDictionaries = await response.json();
     const aliasMapping = columnDictionaries['field_aliases'];
     console.log("Route Alias Mapping: ", Object.keys(aliasMapping));
+
+    // Generate the popup content
     for (let property in clickedfeature.properties) {
         // Use alias if available, otherwise use the original property name
         const aliasProperty = aliasMapping[property] || property;
-        if (!["info_src", "cur_miss"].includes(property)) {
+        if (!unwanted.includes(property)) {
             popupContent += `<li><strong>${aliasProperty}</strong>: ${clickedfeature.properties[property]}</li>`
         } else if (property === "cur_miss") {
             let shorterText = clickedfeature.properties[property].substring(0, 42)
