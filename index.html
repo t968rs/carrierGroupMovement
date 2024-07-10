@@ -28,13 +28,6 @@
     // Add user control
     map.addControl(new mapboxgl.NavigationControl());
 
-    // The following values can be changed to control rotation speed:
-    const secondsPerRevolution = 300;
-    const maxSpinZoom = 5;
-    const slowSpinZoom = 3;
-    let userInteracting = false;
-    const spinEnabled = true;
-    // Variables for tracking popup and added layer
     let loc_popup;
 
     // On Load event
@@ -87,18 +80,6 @@
             }
         });
         console.log('Layer added')
-    });
-
-    // Pause spinning on interaction
-    map.on('mousedown', () => {
-        userInteracting = true;
-    });
-    map.on('dragstart', () => {
-        userInteracting = true;
-    });
-    // When animation is complete, start spinning if there is no ongoing interaction
-    map.on('moveend', () => {
-        // spinGlobe();
     });
 
     // Popups for each layer
