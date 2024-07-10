@@ -15,13 +15,12 @@ def read_json_to_dict(file: str) -> dict:
 
 class UpdateSeaRoutes:
     def __init__(self):
+        self.field_aliases, self.data_types = {}, {}
         field_dicts = read_json_to_dict("../data/routes_columns.json")
         self.set_attributes_from_dict(field_dicts)
         self.point_locations = "../data/locations.geojson"
         self.routes_save = "../data/routes.geojson"
         self.output_folder = os.path.split(self.point_locations)[0]
-
-        self.field_aliases, self.data_types = {}, {}
 
         self.crs = None
         self.route_gdf = None
@@ -155,6 +154,10 @@ class UpdateSeaRoutes:
 
     @staticmethod
     def cleanup_all_routes(gdf, ids_to_remove=None):
+        # Round lengths to 1 decimal place
+        gdf['length_miles'] = gdf['length_miles'].round(1)
+        # print(f'  GDF: \n{gdf["length_miles"]}')
+
         gdf.sort_values(by=["length_miles"], inplace=True, ascending=False)
         gdf = gdf.drop_duplicates(["loc_id", "tm_domain"], keep="first")
         unique_ids = list(set(gdf['loc_id'].values.tolist()))
@@ -226,6 +229,7 @@ class UpdateSeaRoutes:
             if point_lookup["Past"] and point_lookup["Current"]:
                 fields_dict['start_date'] = dates_lookup['Past']['Start']
                 fields_dict['end_date'] = dates_lookup['Past']['End']
+
                 # noinspection PyTypeChecker
                 fields_dict['tm_domain'] = "Past"
                 route, fields_dict["length_miles"], _ = self.get_routes(point_lookup["Past"],
@@ -264,14 +268,13 @@ class UpdateSeaRoutes:
                     all_lines_gdf = temp_gdf
 
         # Save the GeoDataFrames
-        all_lines_gdf = all_lines_gdf.astype(self.data_types)
         print(f'All Lines GDF: \n{all_lines_gdf}')
-
         old_routes = self.cleanup_old_routes(self.routes_save)
         all_lines_gdf = gpd.GeoDataFrame(pd.concat([old_routes, all_lines_gdf], ignore_index=True), crs=self.crs)
         all_lines_gdf = self.cleanup_all_routes(all_lines_gdf, unique_loc_ids)
         all_lines_gdf = times_gdf.convert_gdf_date_to_iso(all_lines_gdf)
         all_lines_gdf = self.add_numbered_primary_key(all_lines_gdf, 'route_id')
+        all_lines_gdf = all_lines_gdf.astype(self.data_types)
         all_lines_gdf.to_file(os.path.join(self.output_folder, "routes.geojson"), driver="GeoJSON")
         print(f"Saved routes to {self.output_folder} as routes.json")
 
