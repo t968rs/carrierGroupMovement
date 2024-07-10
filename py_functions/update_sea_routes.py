@@ -31,6 +31,7 @@ class UpdateSeaRoutes:
         field_dicts = read_json_to_dict("../data/routes_columns.json")
         self.set_attributes_from_dict(field_dicts)
         self.point_locations = "../data/locations.geojson"
+        self.routes_save = "../data/routes.geojson"
         self.output_folder = os.path.split(self.point_locations)[0]
 
         self.crs = None
@@ -251,6 +252,9 @@ class UpdateSeaRoutes:
         # Save the GeoDataFrames
         all_lines_gdf = all_lines_gdf.astype(self.data_types)
         print(f'All Lines GDF: \n{all_lines_gdf}')
+
+        old_routes = gpd.read_file(self.routes_save)
+        all_lines_gdf = gpd.GeoDataFrame(pd.concat([old_routes, all_lines_gdf], ignore_index=True), crs=self.crs)
         all_lines_gdf.to_file(os.path.join(self.output_folder, "routes.geojson"), driver="GeoJSON")
         print(f"Saved routes to {self.output_folder} as routes.json")
 
