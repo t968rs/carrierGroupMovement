@@ -4,12 +4,11 @@
         "hull_id": "Hull ID",
         "tm_domain": "Time Domain",
         "type": "Command Type",
-        "cur_miss": "Current Mission",
+        "loc_miss": "Location Mission",
         "status": "Status",
         "info_src": "Info Source",
         "deprt_date": "Departure Date",
-        "loc_date": "Location Date",
-        "group_id": "Group ID"
+        "loc_date": "Location Date"
 
     },
     "data_types": {
@@ -17,12 +16,11 @@
         "hull_id": "object",
         "tm_domain": "object",
         "type": "object",
-        "cur_miss": "object",
+        "loc_miss": "object",
         "status": "object",
         "info_src": "object",
         "deprt_date": "datetime64[s]",
-        "loc_date": "datetime64[s]",
-        "group_id": "object"
+        "loc_date": "datetime64[s]"
 
     }
 }

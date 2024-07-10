@@ -179,6 +179,21 @@ class UpdateSeaRoutes:
         # print(f'  Route: {route.geometry}, Length: {route.properties["length"]}')
         return route, route.properties['length']
 
+    @staticmethod
+    def process_old_routes(routes_file):
+        if os.path.exists(routes_file):
+            old_routes = gpd.read_file(routes_file)
+            old_routes.sort_values(by=["length_miles"], inplace=True, ascending=False)
+            old_routes = old_routes.astype({"start_date": "datetime64[ns]",
+                                            "end_date": "datetime64[ns]"})
+            old_routes = old_routes.drop_duplicates(["loc_id", "tm_domain"], keep="first")
+            printer = old_routes[['loc_id', 'tm_domain', 'length_miles']]
+
+            print(f'Old Routes: \n{printer}')
+            return old_routes
+        else:
+            return gpd.GeoDataFrame()
+
     def create_routes(self):
 
         # Read the GeoDataFrame
@@ -188,6 +203,7 @@ class UpdateSeaRoutes:
         print(f'Columns: {self.c_list}, \nCRS: {self.crs}')
 
         unique_hull_ids = list(set(gdf['hull_id'].values.tolist()))
+        unique_loc_ids = list(set(gdf['loc_id'].values.tolist()))
         print(f'Unique Hull IDs: {unique_hull_ids}')
 
         # Initialize an empty GeoDataFrame
@@ -253,8 +269,13 @@ class UpdateSeaRoutes:
         all_lines_gdf = all_lines_gdf.astype(self.data_types)
         print(f'All Lines GDF: \n{all_lines_gdf}')
 
-        old_routes = gpd.read_file(self.routes_save)
+        old_routes = self.process_old_routes(self.routes_save)
         all_lines_gdf = gpd.GeoDataFrame(pd.concat([old_routes, all_lines_gdf], ignore_index=True), crs=self.crs)
+        all_lines_gdf.sort_values(by=["length_miles"], inplace=True, ascending=False)
+        all_lines_gdf = all_lines_gdf.drop_duplicates(["loc_id", "tm_domain"], keep="first")
+        unique_route_loc_ids = list(set(all_lines_gdf['loc_id'].values.tolist()))
+        not_in_pts = [loc_id for loc_id in unique_route_loc_ids if loc_id not in unique_loc_ids]
+        all_lines_gdf = all_lines_gdf[~all_lines_gdf['loc_id'].isin(not_in_pts)]
         all_lines_gdf.to_file(os.path.join(self.output_folder, "routes.geojson"), driver="GeoJSON")
         print(f"Saved routes to {self.output_folder} as routes.json")
 
