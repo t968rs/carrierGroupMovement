@@ -84,7 +84,7 @@
         });
 
         // Popups for each layer
-        map.on('click', 'command-group-locations', (e) => {
+        map.on('click', 'command-group-locations', async (e) => {
             // Copy coordinates array.
             const coordinates = e.features[0].geometry.coordinates.slice();
             let hullid = e.features[0].properties["hull_no"];
@@ -105,7 +105,7 @@
             }
 
             // Dynamically create HTML content for the popup
-            const mapPopupContent = createCarrierPointPopupContent(clickedfeature);
+            const mapPopupContent = await createCarrierPointPopupContent(clickedfeature);
             // Create the popup
             new mapboxgl.Popup({
                 closeButton: true,
