@@ -12,8 +12,16 @@ export async function createCarrierPointPopupContent(clickedfeature) {
     for (let property in clickedfeature.properties) {
         // Use alias if available, otherwise use the original property name
         const aliasProperty = aliasMapping[property] || property;
+
         if (!unwanted.includes(property)) {
+            let value = clickedfeature.properties[property];
+            if (property.toLowerCase().includes('date') && typeof value === 'string'
+            && value.match(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/))
+                {
+                value = value.substring(0, 10); // Extract the date part
+            }
             popupContent += `<p><strong>${aliasProperty}</strong>: ${clickedfeature.properties[property]}</p>`
+
         } else if (property === "cur_miss") {
             let shorterText = clickedfeature.properties[property].substring(0, 42)
             popupContent += `<p><strong>${aliasProperty}</strong>: ${shorterText}</p>`
@@ -35,7 +43,14 @@ export async function createRouteLinePopupContent(clickedfeature) {
         // Use alias if available, otherwise use the original property name
         const aliasProperty = aliasMapping[property] || property;
         if (!unwanted.includes(property)) {
-            popupContent += `<p><strong>${aliasProperty}</strong>: ${clickedfeature.properties[property]}</p>`
+            let value = clickedfeature.properties[property];
+            if (property.toLowerCase().includes('date') && typeof value === 'string'
+            && value.match(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/))
+                {
+                value = value.substring(0, 10); // Extract the date part
+            }
+            popupContent += `<p><strong>${aliasProperty}</strong>: ${value}</p>`
+
         } else if (property === "cur_miss") {
             let shorterText = clickedfeature.properties[property].substring(0, 42)
             popupContent += `<p><strong>${aliasProperty}</strong>: ${shorterText}</p>`
