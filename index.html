@@ -218,27 +218,15 @@
         map.panTo(e.lngLat);
     });
 
-        // Remove popup and additional layers when clicking outside the popup
-        //map.on('click', (elsewhere) =>
-        /*{
-            if (loc_popup)
-            {
-                const isClickInsidePopup = loc_popup.isOpen() && loc_popup.getElement().contains(elsewhere.originalEvent.target);
+    map.on('click', function(e) {
+        const features = map.queryRenderedFeatures(e.point, {
+            layers: ['myLayer'] // Specify the layers you want to check
+        });
 
-                if (!isClickInsidePopup) {
-                    loc_popup.remove();
-                    // Remove past and future layers
-                    if (map.getLayer('past-layer')) {
-                        map.removeLayer('past-layer');
-                                }
-                    if (map.getLayer('future-layer')) {
-                        map.removeLayer('future-layer');
-                                }
-                }
-            }
-
-
-        });*/
+        if (!features.length) {
+            document.getElementById('custom-popup').style.display = 'none';
+        }
+    });
 
         // Change the cursor to a pointer when the mouse is over the places layer.
         map.on('mouseenter', 'command-group-locations', () =>
