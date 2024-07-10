@@ -9,7 +9,7 @@ export async function createCarrierPointPopupContent(clickedfeature) {
     console.log("Alias Mapping: ", Object.keys(aliasMapping));
     for (let property in clickedfeature.properties) {
         // Use alias if available, otherwise use the original property name
-        const aliasProperty = alias_mapping[property] || property;
+        const aliasProperty = aliasMapping[property] || property;
         if (!["info_src", "cur_miss"].includes(property)) {
             popupContent += `<li><strong>${aliasProperty}</strong>: ${clickedfeature.properties[property]}</li>`
         } else if (property === "cur_miss") {
@@ -28,7 +28,7 @@ export async function createRouteLinePopupContent(clickedfeature) {
     console.log("Route Alias Mapping: ", Object.keys(aliasMapping));
     for (let property in clickedfeature.properties) {
         // Use alias if available, otherwise use the original property name
-        const aliasProperty = alias_mapping[property] || property;
+        const aliasProperty = aliasMapping[property] || property;
         if (!["info_src", "cur_miss"].includes(property)) {
             popupContent += `<li><strong>${aliasProperty}</strong>: ${clickedfeature.properties[property]}</li>`
         } else if (property === "cur_miss") {
