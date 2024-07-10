@@ -70,7 +70,7 @@
                     }
                 });
             map.addLayer({
-                id: 'carrier-group-locations',
+                id: 'command-group-locations',
                 type: 'symbol',
                 source: 'locations',
                 filter: ["all", ["match", ["get", "tm_domain"], ["Current"], true, false]],
@@ -84,7 +84,7 @@
         });
 
         // Popups for each layer
-        map.on('click', 'carrier-group-locations', (e) => {
+        map.on('click', 'command-group-locations', (e) => {
             // Copy coordinates array.
             const coordinates = e.features[0].geometry.coordinates.slice();
             let hullid = e.features[0].properties["hull_no"];
