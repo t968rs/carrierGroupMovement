@@ -186,15 +186,15 @@
             }
         });
 
-        /*// Popups for each layer
+        // Popups for each layer
         map.on('click', 'route-layer', async function (e) {
             const clickedFeature = e.features[0];
             const sidepopupContent = await createRouteLinePopupContent(clickedFeature);
 
             // Update custom popup content and display it
-            const customPopup = document.getElementById('top-left-popup-popup');
-            customPopup.innerHTML = `<ul>${sidepopupContent}</ul>`;
-            customPopup.style.display = 'block';
+            const routePopup = document.getElementById('top-left-popup-popup');
+            routePopup.innerHTML = `<ul>${sidepopupContent}</ul>`;
+            routePopup.style.display = 'block';
 
             // Optionally, pan the map to ensure the feature is visible
             map.panTo(e.lngLat);
@@ -208,7 +208,7 @@
             if (!features.length) {
                 document.getElementById('custom-popup').style.display = 'none';
             }
-        });*/
+        });
 
         // Change the cursor to a pointer when the mouse is over the places layer.
         map.on('mouseenter', 'command-group-locations', () => {

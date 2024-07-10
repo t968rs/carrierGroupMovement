@@ -1,7 +1,7 @@
 // Function to create popup content
 
 let popupContent = '<ul>';
-let unwanted = ["OID_", "OID", "OBJECTID", "info_src", "cur_miss"];
+let unwanted = ["OID_", "OID", "OBJECTID", "info_src", "cur_miss", "loc_id", "route_id"];
 export async function createCarrierPointPopupContent(clickedfeature) {
     // Fetch the alias mapping JSON file
     const response = await fetch('./data/locations_columns.json');
