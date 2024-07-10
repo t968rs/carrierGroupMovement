@@ -1,6 +1,7 @@
 import os
 import geopandas as gpd
 import json
+import convert_times as times_gdf
 
 
 # Import json as dictionary
@@ -66,10 +67,12 @@ class WriteNewGeoJSON:
             if c not in list(self.field_aliases.keys()) + ['geometry']:
                 self.gdf.drop([c], axis=1, inplace=True)
                 print(f'     - Dropped {c}')
+            if "date" in c:
+                self.gdf = times_gdf.convert_gdf_date_to_iso(self.gdf, c)
+                print(f'    {c}: {self.gdf.dtypes[c]}')
             else:
                 print(f'    {c}: {self.gdf.dtypes[c]}')
-                # unique_loc = self.gdf['loc_id'].values.tolist()
-                # print(f'    Unique loc_id: {unique_loc}')
+
         driver = "GeoJSON"
         outpath = os.path.join(self.output_folder, f"{self.filename}.geojson")
         self.gdf.to_file(filename=outpath, driver=driver,

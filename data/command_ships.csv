@@ -1,0 +1,3 @@
+﻿OID_,type,class,ship_name,Hull_no,laid_down,launched,commissioned,speed_off_kts,curr_miss,status,info_source,group_id
+1,Aircraft Carrier,Nimitz,USS Theodore Roosevelt,CVN-71,10/31/1981,10/27/1984,10/25/1986,30.0000000,Regional deterrence and force protection efforts,Transit,https://www.c7f.navy.mil/Media/News/Display/Article/3819064/trilateral-statement-first-execution-of-multi-domain-japan-rok-us-exercise-free/,TRCSG
+2,Aircraft Carrier,Nimitz,USS Dwight D. Eisenhower,CVN-69,8/15/1970,10/11/1975,10/18/1977,30.0000000,Homeport,Transit,https://news.usni.org/2024/04/26/carrier-uss-dwight-d-eisenhower-now-in-the-mediterranean-sea,CSG2

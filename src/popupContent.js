@@ -1,15 +1,18 @@
 // Function to create popup content
-export function createCarrierPointPopupContent(clickedfeature, alias_mapping)
-{
-    let popupContent = '<ul>';
-    for (let property in clickedfeature.properties)
-    {
+
+let popupContent = '<ul>';
+export async function createCarrierPointPopupContent(clickedfeature) {
+    // Fetch the alias mapping JSON file
+    const response = await fetch('./data/locations_columns.json');
+    const columnDictionaries = await response.json();
+    const aliasMapping = columnDictionaries['field_aliases'];
+    console.log("Alias Mapping: ", Object.keys(aliasMapping));
+    for (let property in clickedfeature.properties) {
         // Use alias if available, otherwise use the original property name
         const aliasProperty = alias_mapping[property] || property;
         if (!["info_src", "cur_miss"].includes(property)) {
             popupContent += `<li><strong>${aliasProperty}</strong>: ${clickedfeature.properties[property]}</li>`
-        }
-        else if (property === "cur_miss") {
+        } else if (property === "cur_miss") {
             let shorterText = clickedfeature.properties[property].substring(0, 42)
             popupContent += `<li><strong>${aliasProperty}</strong>: ${shorterText}</li>`
         }
@@ -17,17 +20,18 @@ export function createCarrierPointPopupContent(clickedfeature, alias_mapping)
     return popupContent;
 }
 
-export function createRouteLinePopupContent(clickedfeature, alias_mapping)
-{
-    let popupContent = '<ul>';
-    for (let property in clickedfeature.properties)
-    {
+export async function createRouteLinePopupContent(clickedfeature) {
+    // Fetch the alias mapping JSON file
+    const response = await fetch('./data/routes_columns.json');
+    const columnDictionaries = await response.json();
+    const aliasMapping = columnDictionaries['field_aliases'];
+    console.log("Alias Mapping: ", Object.keys(aliasMapping));
+    for (let property in clickedfeature.properties) {
         // Use alias if available, otherwise use the original property name
         const aliasProperty = alias_mapping[property] || property;
         if (!["info_src", "cur_miss"].includes(property)) {
             popupContent += `<li><strong>${aliasProperty}</strong>: ${clickedfeature.properties[property]}</li>`
-        }
-        else if (property === "cur_miss") {
+        } else if (property === "cur_miss") {
             let shorterText = clickedfeature.properties[property].substring(0, 42)
             popupContent += `<li><strong>${aliasProperty}</strong>: ${shorterText}</li>`
         }

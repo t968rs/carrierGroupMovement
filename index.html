@@ -18,12 +18,6 @@
 <body>
 <div id="map"></div>
 <script type="module">
-    // Fetch the alias mapping JSON file
-    const response = await fetch('./data/locations_columns.json');
-    const columnDictionaries = await response.json();
-    const aliasMapping = columnDictionaries['field_aliases'];
-    console.log("Alias Mapping: ", Object.keys(aliasMapping));
-
     // Import the createPopupContent function
     import { createCarrierPointPopupContent } from './src/popupContent.js';
 
@@ -116,8 +110,8 @@
     map.on('click', 'carrier-group-locations', (e) => {
         // Copy coordinates array.
         const coordinates = e.features[0].geometry.coordinates.slice();
-        let hullid = e.features[0].properties["hull_id"];
-        let hull_filter = ["==", ["get", "hull_id"], hullid];
+        let hullid = e.features[0].properties["hull_no"];
+        let hull_filter = ["==", ["get", "hull_no"], hullid];
         let locid = e.features[0].properties["loc_id"];
         let loc_filter = ["==", ["get", "loc_id"], locid];
         const clickedfeature = e.features[0];
@@ -135,7 +129,7 @@
         }
 
         // Dynamically create HTML content for the popup
-        const popupContent = createCarrierPointPopupContent(clickedfeature, aliasMapping);
+        const popupContent = createCarrierPointPopupContent(clickedfeature);
         console.log("Popup", popupContent);
 
         // Display a popup with attributes/columns from the clicked feature
@@ -208,6 +202,32 @@
                 }
             })
         }
+    });
+
+    // Popups for each layer
+    map.on('click', 'route-layer', (e) => {
+        // Copy coordinates array.
+        const coordinates = e.features[0].geometry.coordinates.slice();
+        let hullid = e.features[0].properties["hull_no"];
+        let hull_filter = ["==", ["get", "hull_no"], hullid];
+        let locid = e.features[0].properties["loc_id"];
+        let loc_filter = ["==", ["get", "loc_id"], locid];
+        const clickedfeature = e.features[0];
+        console.log(clickedfeature.properties);
+        console.log("Hull Filter: ", hull_filter);
+
+        // Ensure that if the map is zoomed out such that multiple
+        // copies of the feature are visible, the popup appears
+        // over the copy being pointed to.
+        if (['mercator', 'equirectangular'].includes(map.getProjection().name))
+        {
+            while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+                coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+            }
+        }
+
+
+
     });
 
         // Remove popup and additional layers when clicking outside the popup

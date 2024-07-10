@@ -1,0 +1,32 @@
+{
+    "0":{
+        "OID_":1,
+        "type":"Aircraft Carrier",
+        "class":"Nimitz",
+        "ship_name":"USS Theodore Roosevelt",
+        "Hull_no":"CVN-71",
+        "laid_down":"10\/31\/1981",
+        "launched":"10\/27\/1984",
+        "commissioned":"10\/25\/1986",
+        "speed_off_kts":30.0,
+        "curr_miss":"Regional deterrence and force protection efforts",
+        "status":"Transit",
+        "info_source":"https:\/\/www.c7f.navy.mil\/Media\/News\/Display\/Article\/3819064\/trilateral-statement-first-execution-of-multi-domain-japan-rok-us-exercise-free\/",
+        "group_id":"TRCSG"
+    },
+    "1":{
+        "OID_":2,
+        "type":"Aircraft Carrier",
+        "class":"Nimitz",
+        "ship_name":"USS Dwight D. Eisenhower",
+        "Hull_no":"CVN-69",
+        "laid_down":"8\/15\/1970",
+        "launched":"10\/11\/1975",
+        "commissioned":"10\/18\/1977",
+        "speed_off_kts":30.0,
+        "curr_miss":"Homeport",
+        "status":"Transit",
+        "info_source":"https:\/\/news.usni.org\/2024\/04\/26\/carrier-uss-dwight-d-eisenhower-now-in-the-mediterranean-sea",
+        "group_id":"CSG2"
+    }
+}

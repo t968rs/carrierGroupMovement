@@ -5,8 +5,9 @@
         "start_date": "Start Travel",
         "end_date": "Arrival",
         "loc_id": "Loc ID",
-        "hull_id": "Hull ID",
-        "tm_domain": "Time Domain"
+        "hull_no": "Hull ID",
+        "tm_domain": "Time Domain",
+        "route_id": "Route ID"
     },
 
     "data_types":
@@ -15,7 +16,8 @@
         "start_date": "datetime64[s]",
         "end_date": "datetime64[s]",
         "loc_id": "int8",
-        "hull_id": "object",
-        "tm_domain": "object"
+        "hull_no": "object",
+        "tm_domain": "object",
+        "route_id": "int8"
     }
 }
