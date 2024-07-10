@@ -7,7 +7,7 @@
     <link href="https://api.mapbox.com/mapbox-gl-js/v3.4.0/mapbox-gl.css" rel="stylesheet">
     <link href="styles_add.css" rel="stylesheet">
     <script src="https://api.mapbox.com/mapbox-gl-js/v3.4.0/mapbox-gl.js"></script>
-    <script src="./src/map_functionality.js" type="module"></script>
+    <script src="./src/mapInteractions.js" type="module"></script>
 </head>
 <body>
 
@@ -15,8 +15,7 @@
     <div id="top-left-popup" class="top-left-popup" style="display: none;"></div>
 
     <script type="module">
-        // Import the createPopupContent function
-        import {createCarrierPointPopupContent, createRouteLinePopupContent} from './src/popupContent.js';
+        import { createCarrierPointPopupContent, createRouteLinePopupContent, fitMapToLayerBounds } from './src/mapInteractions.js';
 
         mapboxgl.accessToken = 'pk.eyJ1IjoidDk2OHJzIiwiYSI6ImNpamF5cTcxZDAwY2R1bWx4cWJvd3JtYXoifQ.XqJkBCgSJeCCeF_yugpG5A';
         const map = new mapboxgl.Map({
@@ -217,19 +216,12 @@
                 }
             }
 
-
         });
 
-        // Change the cursor to a pointer when the mouse is over the places layer.
-        map.on('mouseenter', 'command-group-locations', () => {
-            console.log(' Mouse entered')
-            map.getCanvas().style.cursor = 'pointer';
-        });
-
-        // Change it back to a pointer when it leaves.
-        map.on('mouseleave', 'command-group-locations', () => {
-            console.log(' Mouse left')
-            map.getCanvas().style.cursor = '';
+        // Change the cursor to a pointer when the mouse is over any feature.
+        map.on('mousemove', (e) => {
+            const features = map.queryRenderedFeatures(e.point);
+            map.getCanvas().style.cursor = features.length ? 'pointer' : '';
         });
 
     </script>
