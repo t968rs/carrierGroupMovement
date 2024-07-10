@@ -123,7 +123,7 @@
         }
 
         // Dynamically create HTML content for the popup
-        const popupContent = createCarrierPointPopupContent(clickedfeature);
+        const mapPopupContent = createCarrierPointPopupContent(clickedfeature);
         // Create the popup
         new mapboxgl.Popup({
             closeButton: true,
@@ -135,7 +135,7 @@
         // Display a popup with attributes/columns from the clicked feature
         loc_popup = new mapboxgl.Popup()
             .setLngLat(coordinates)
-            .setHTML(popupContent)
+            .setHTML(mapPopupContent)
             .addTo(map);
 
         // Add the past and future layers
@@ -207,11 +207,11 @@
     // Popups for each layer
     map.on('click', 'route-layer' , async function(e) {
         const clickedFeature = e.features[0];
-        const popupContent = await createRouteLinePopupContent(clickedFeature);
+        const sidepopupContent = await createRouteLinePopupContent(clickedFeature);
 
         // Update custom popup content and display it
-        const customPopup = document.getElementById('custom-popup');
-        customPopup.innerHTML = `<ul>${popupContent}</ul>`;
+        const customPopup = document.getElementById('top-left-popup-popup');
+        customPopup.innerHTML = `<ul>${sidepopupContent}</ul>`;
         customPopup.style.display = 'block';
 
         // Optionally, pan the map to ensure the feature is visible
