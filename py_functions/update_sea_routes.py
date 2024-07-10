@@ -96,6 +96,7 @@ class UpdateSeaRoutes:
 
         # Find the most recent past-dated point
         past_points = gdf_thishull[gdf_thishull['loc_date'] < target_date]
+        past_points.to_file(os.path.join(os.path.split(__file__)[0], f"past_points_{hull_id}.geojson"), driver="GeoJSON")
         print(f'\n--{hull_id} Past Points: \n{past_points}')
         if past_points.empty:
             point_dict['Past'] = None
@@ -109,6 +110,7 @@ class UpdateSeaRoutes:
 
         # Find the next future-dated point
         future_points = gdf_thishull[gdf_thishull['loc_date'] > target_date]
+        future_points.to_file(os.path.join(os.path.split(__file__)[0], f"future_points_{hull_id}.geojson"), driver="GeoJSON")
         if future_points.empty:
             future_points = gdf_thishull[gdf_thishull['tm_domain'] == "Future"]
             if future_points.empty:
@@ -144,7 +146,8 @@ class UpdateSeaRoutes:
         origin_point = {'latitude': start[1], 'longitude': start[0]}
         dest_point = {'latitude': end[1], 'longitude': end[0]}
         print(f'   Origin: {origin_point}, \n   Destination: {dest_point}')
-        route = sea_routes.get_shortest_path(origin_point, dest_point, "mi")
+        route = sea_routes.get_shortest_path(origin_point, dest_point, "mi",
+                                             node_addition_math="haversine", node_addition_circuity=10)
         print(f'  Route: {route["length"]}')
         return route['coordinate_path'], route['length']
 
