@@ -84,14 +84,24 @@
         });
 
         // Popups for each layer
-        map.on('click', 'command-group-locations', async (e) => {
-            // Copy coordinates array.
-            const coordinates = e.features[0].geometry.coordinates.slice();
-            let hullid = e.features[0].properties["hull_no"];
+        map.on('click', async (e) => {
+            const features = map.queryRenderedFeatures(e.point);
+            if (!features.length) {
+                console.log('No features found')
+                if (loc_popup) {
+                    loc_popup.remove(); // Close the popup if no feature is clicked
+                    loc_popup = null;
+                }
+                return;
+            }
+
+            // Handle the features found
+            const clickedfeature = features[0]; // Use the first feature found, or customize as needed
+            const coordinates = clickedfeature.geometry.coordinates.slice();
+            let hullid = features[0].properties["hull_no"];
             let hull_filter = ["==", ["get", "hull_no"], hullid];
-            let locid = e.features[0].properties["loc_id"];
+            let locid = features[0].properties["loc_id"];
             let loc_filter = ["==", ["get", "loc_id"], locid];
-            const clickedfeature = e.features[0];
             console.log(clickedfeature.properties);
             console.log("Hull Filter: ", hull_filter);
 
@@ -102,6 +112,11 @@
                 while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
                     coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
                 }
+            }
+
+            // Remove any existing popup to prevent content from appending
+            if (loc_popup) {
+                loc_popup.remove();
             }
 
             // Dynamically create HTML content for the popup
@@ -186,7 +201,7 @@
             }
         });
 
-        // Popups for each layer
+        /*// Popups for each layer
         map.on('click', 'route-layer', async function (e) {
             const clickedFeature = e.features[0];
             const sidepopupContent = await createRouteLinePopupContent(clickedFeature);
@@ -198,17 +213,7 @@
 
             // Optionally, pan the map to ensure the feature is visible
             map.panTo(e.lngLat);
-        });
-
-        map.on('click', function (e) {
-            const features = map.queryRenderedFeatures(e.point, {
-                layers: ['myLayer'] // Specify the layers you want to check
-            });
-
-            if (!features.length) {
-                document.getElementById('custom-popup').style.display = 'none';
-            }
-        });
+        });*/
 
         // Change the cursor to a pointer when the mouse is over the places layer.
         map.on('mouseenter', 'command-group-locations', () => {
