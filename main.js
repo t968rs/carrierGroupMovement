@@ -1,4 +1,8 @@
-import { createCarrierPointPopupContent, createRouteLinePopupContent, fitMapToLayerBounds } from './src/mapInteractions.js';
+import {
+    createCarrierPointPopupContent,
+    createRouteLinePopupContent,
+    fitMapToFeatureBounds,
+} from './src/mapInteractions.js';
 
 mapboxgl.accessToken = 'pk.eyJ1IjoidDk2OHJzIiwiYSI6ImNpamF5cTcxZDAwY2R1bWx4cWJvd3JtYXoifQ.XqJkBCgSJeCCeF_yugpG5A';
 const map = new mapboxgl.Map({
@@ -62,6 +66,18 @@ map.on('load', () => {
             'icon-allow-overlap': true
         }
     });
+
+    // Add highlight layer
+    map.addLayer({
+        id: 'route-layer-highlight',
+        type: 'line',
+        source: 'routes',
+        paint: {
+            'line-color': '#00ffd0', // Highlight color
+            'line-width': 4
+        },
+        filter: ['in', 'route_id', ''] // Initially, no feature is highlighted
+    });
     console.log('Layer added')
 });
 
@@ -108,15 +124,21 @@ map.on('click', async (e) => {
         if (['route-layer'].includes(clickedLayer)) {
             console.log('Route layer clicked');
             const sidepopupContent = await createRouteLinePopupContent(clickedfeature);
+
+            // Highlight the clicked feature
+            const route_featID = clickedfeature.properties['route_id'] || clickedfeature.id;
+            console.log('Route ID:', route_featID); // Log the feature ID
+            map.setFilter('route-layer-highlight', ['==', 'route_id', route_featID]);
+
             // Update custom popup content and display it
             const routePopup = document.getElementById('top-left-popup');
             routePopup.innerHTML = `<ul>${sidepopupContent}</ul>`;
             routePopup.style.display = 'block';
-            fitMapToLayerBounds('route-layer');
-            return;
-        }
+            fitMapToFeatureBounds(map,clickedfeature);
 
-        else if (['command-group-locations'].includes(clickedLayer)){
+            return;
+
+        } else if (['command-group-locations'].includes(clickedLayer)) {
             // Dynamically create HTML content for the popup
             const mapPopupContent = await createCarrierPointPopupContent(clickedfeature);
             // Create the popup
@@ -152,49 +174,47 @@ map.on('click', async (e) => {
                     }
                 })
             }
-        // Future layer
-        if (map.getLayer('future-layer')) {
-            console.log('Future layer exists');
-            map.setFilter('future-layer',
-                ["all",
-                    ["match", ["get", "tm_domain"], ["Future"], true, false],
-                    hull_filter]);
-        }
-        else {
-            console.log('Future layer does not exist')
-            // Add future layers
-            map.addLayer({
-                id: 'future-layer',
-                type: 'symbol',
-                source: 'locations',
-                filter: ["all",
-                    ["match", ["get", "tm_domain"], ["Future"], true, false],
-                    hull_filter],
-                layout: {
-                    'icon-image': 'green-ac', // Use the loaded image as the marker
-                    'icon-size': 0.075,
-                    'icon-allow-overlap': true
-                }
-            })
-        }
-        // Route Layer
-        if (map.getLayer('route-layer')) {
-            console.log('Route layer exists');
-            map.setFilter('route-layer', loc_filter);
-        }
-        else {
-            console.log('Route layer does not exist')
-            map.addLayer({
-                id: 'route-layer',
-                type: 'line',
-                source: 'routes',
-                filter: loc_filter,
-                paint: {
-                    'line-color': '#028663',
-                    'line-width': 2
+            // Future layer
+            if (map.getLayer('future-layer')) {
+                console.log('Future layer exists');
+                map.setFilter('future-layer',
+                    ["all",
+                        ["match", ["get", "tm_domain"], ["Future"], true, false],
+                        hull_filter]);
+            } else {
+                console.log('Future layer does not exist')
+                // Add future layers
+                map.addLayer({
+                    id: 'future-layer',
+                    type: 'symbol',
+                    source: 'locations',
+                    filter: ["all",
+                        ["match", ["get", "tm_domain"], ["Future"], true, false],
+                        hull_filter],
+                    layout: {
+                        'icon-image': 'green-ac', // Use the loaded image as the marker
+                        'icon-size': 0.075,
+                        'icon-allow-overlap': true
+                    }
+                })
             }
-        })
-    }
+            // Route Layer
+            if (map.getLayer('route-layer')) {
+                console.log('Route layer exists');
+                map.setFilter('route-layer', loc_filter);
+            } else {
+                console.log('Route layer does not exist')
+                map.addLayer({
+                    id: 'route-layer',
+                    type: 'line',
+                    source: 'routes',
+                    filter: loc_filter,
+                    paint: {
+                        'line-color': '#028663',
+                        'line-width': 2
+                    }
+                })
+            }
         }
     }
 

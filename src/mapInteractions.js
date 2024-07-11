@@ -60,21 +60,22 @@ export async function createRouteLinePopupContent(clickedfeature) {
 }
 
 // Function to fit map to the bounds of the specified layer
-export function fitMapToLayerBounds(layerId) {
-    const features = map.queryRenderedFeatures({ layers: [layerId] });
-    if (features.length) {
-        const bounds = features.reduce((bounds, feature) => {
-            return bounds.extend(feature.geometry.coordinates.reduce((innerBounds, coord) => {
-                return innerBounds.extend(coord);
-            }, new mapboxgl.LngLatBounds(coord, coord)));
-        }, new mapboxgl.LngLatBounds(features[0].geometry.coordinates[0], features[0].geometry.coordinates[0]));
+export function fitMapToFeatureBounds(map, feature) {
+    // Create a new LngLatBounds object
+    const bounds = new mapboxgl.LngLatBounds();
 
-        map.fitBounds(bounds, {
-            padding: 20,
-            maxZoom: 15,
-            duration: 1000
-        });
-    }
+    // Get the coordinates of the feature
+    const coordinates = feature.geometry.coordinates;
+
+    // Extend the bounds to include the coordinates of the feature
+    coordinates.forEach(coord => {
+        bounds.extend(coord);
+    });
+
+    // Fit the map to the bounds with a padding of 20, a max zoom of 15, and a duration of 1000
+    map.fitBounds(bounds, {
+        padding: 20,
+        maxZoom: 15,
+        duration: 1000
+    });
 }
-// Export the function to make it available globally
-window.fitMapToLayerBounds = fitMapToLayerBounds;
