@@ -2,6 +2,7 @@ import {
     createCarrierPointPopupContent,
     createRouteLinePopupContent,
     fitMapToFeatureBounds,
+    closePopup
 } from './src/mapInteractions.js';
 
 mapboxgl.accessToken = 'pk.eyJ1IjoidDk2OHJzIiwiYSI6ImNpamF5cTcxZDAwY2R1bWx4cWJvd3JtYXoifQ.XqJkBCgSJeCCeF_yugpG5A';
@@ -10,11 +11,15 @@ const map = new mapboxgl.Map({
     style: 'mapbox://styles/t968rs/cly4kadyt00c401r19uqr7c8e',
     projection: 'globe', // Display the map as a globe, since satellite-v9 defaults to Mercator
     zoom: 3,
+    minZoom: 0,
     center: [30, 15]
 });
 
 // Add user control
 map.addControl(new mapboxgl.NavigationControl());
+
+// Attach the closePopup function to the global window object
+window.closePopup = closePopup;
 
 let loc_popup;
 
@@ -66,6 +71,7 @@ map.on('load', () => {
             'icon-allow-overlap': true
         }
     });
+
 
     // Add highlight layer
     map.addLayer({
@@ -121,7 +127,7 @@ map.on('click', async (e) => {
         console.log(clickedfeature.properties);
 
         const clickedLayer = clickedfeature.layer.id;
-        if (['route-layer'].includes(clickedLayer)) {
+        if (['route-layer', 'route-layer-clicker'].includes(clickedLayer)) {
             console.log('Route layer clicked');
             const sidepopupContent = await createRouteLinePopupContent(clickedfeature);
 
@@ -130,10 +136,15 @@ map.on('click', async (e) => {
             console.log('Route ID:', route_featID); // Log the feature ID
             map.setFilter('route-layer-highlight', ['==', 'route_id', route_featID]);
 
-            // Update custom popup content and display it
-            const routePopup = document.getElementById('top-left-popup');
-            routePopup.innerHTML = `<ul>${sidepopupContent}</ul>`;
-            routePopup.style.display = 'block';
+            // Update the popup content and display the popup
+            const popup = document.getElementById('top-left-popup');
+            const contentElement = document.getElementById('popup-content');
+            if (popup && contentElement) {
+                contentElement.innerHTML = sidepopupContent;
+                popup.style.display = 'block';
+            } else {
+                console.error('Popup or content element not found');
+            }
             fitMapToFeatureBounds(map,clickedfeature);
 
             return;
@@ -153,6 +164,7 @@ map.on('click', async (e) => {
                 .setLngLat(coordinates)
                 .setHTML(mapPopupContent)
                 .addTo(map);
+
             // Add the past and future layers
             if (map.getLayer('past-layer')) {
                 console.log('Past layer exists');
@@ -215,6 +227,18 @@ map.on('click', async (e) => {
                     }
                 })
             }
+            // Add route click layer
+            map.addLayer({
+                id: 'route-layer-clicker',
+                type: 'line',
+                source: 'routes',
+                filter: loc_filter,
+                paint: {
+                    'line-color': 'rgba(0,0,0,0)',
+                    'line-width': 20, // Adjust this to control the clickable area
+                    'line-opacity': 0 // Make the buffer layer invisible
+                }
+            });
         }
     }
 

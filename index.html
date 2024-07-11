@@ -7,13 +7,17 @@
     <link href="https://api.mapbox.com/mapbox-gl-js/v3.4.0/mapbox-gl.css" rel="stylesheet">
     <link href="styles_add.css" rel="stylesheet">
     <script src="https://api.mapbox.com/mapbox-gl-js/v3.4.0/mapbox-gl.js"></script>
+    <script src="./src/turf.min.js" charset="utf-8"></script>
     <script src="./src/mapInteractions.js" type="module"></script>
-    <script src="main.js" type="module"></script> <!-- Include the main.js file -->
 </head>
 <body>
 
     <div id="map"></div>
-    <div id="top-left-popup" class="top-left-popup" style="display: none;"></div>
+    <div id="top-left-popup" class="top-left-popup" style="display: none;">
+        <button class="close-btn" onclick="closePopup()">X</button>
+        <ul id="popup-content"></ul>
+    </div>
+    <script src="main.js" type="module"></script> <!-- Moved to the end of the body -->
 
 </body>
 </html>
