@@ -20,5 +20,6 @@
     <orderEntry type="library" name="handlebars.js" level="application" />
     <orderEntry type="library" name="esri-leaflet-cluster" level="application" />
     <orderEntry type="library" name="mapbox-gl" level="application" />
+    <orderEntry type="library" name="@turf/turf" level="application" />
   </component>
 </module>
