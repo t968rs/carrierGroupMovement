@@ -227,8 +227,13 @@ map.on('click', async (e) => {
                     }
                 })
             }
-            // Add route click layer
-            map.addLayer({
+            // Route Clicker Layer
+            if (map.getLayer("route-layer-clicker")) {
+                console.log('Route layer exists');
+                map.setFilter("route-layer-clicker", loc_filter);
+            } else {
+                console.log('Route layer does not exist')
+                map.addLayer({
                 id: 'route-layer-clicker',
                 type: 'line',
                 source: 'routes',
