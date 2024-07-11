@@ -23,7 +23,7 @@ map.on('load', () => {
     console.log('Map loaded');
     map.addSource('locations', {
         type: 'geojson',
-        data: 'https://raw.githubusercontent.com/t968rs/carrierGroupMovement/master/data/locations.geojson'
+        data: './data/locations.geojson'
     });
     map.addSource('routes', {
         type: 'geojson',
