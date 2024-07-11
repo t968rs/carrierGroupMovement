@@ -145,7 +145,7 @@ map.on('click', async (e) => {
             } else {
                 console.error('Popup or content element not found');
             }
-            fitMapToFeatureBounds(map,clickedfeature);
+            fitMapToFeatureBounds(map, clickedfeature);
 
             return;
 
@@ -234,19 +234,19 @@ map.on('click', async (e) => {
             } else {
                 console.log('Route layer does not exist')
                 map.addLayer({
-                id: 'route-layer-clicker',
-                type: 'line',
-                source: 'routes',
-                filter: loc_filter,
-                paint: {
-                    'line-color': 'rgba(0,0,0,0)',
-                    'line-width': 20, // Adjust this to control the clickable area
-                    'line-opacity': 0 // Make the buffer layer invisible
-                }
-            });
+                    id: 'route-layer-clicker',
+                    type: 'line',
+                    source: 'routes',
+                    filter: loc_filter,
+                    paint: {
+                        'line-color': 'rgba(0,0,0,0)',
+                        'line-width': 20, // Adjust this to control the clickable area
+                        'line-opacity': 0 // Make the buffer layer invisible
+                    }
+                });
+            }
         }
     }
-
 });
 
 // Change the cursor to a pointer when the mouse is over any feature.
